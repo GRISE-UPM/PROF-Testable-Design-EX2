@@ -5,13 +5,13 @@ import static es.upm.grise.profundizacion2018.tema5.Error.INCOMPLETE_DOCUMENT;
 public class Document {
 
 	// Document ID
-	private int documentId;
+	int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	String template;
+	String author;
+	String title;
+	String body;
 	
 	public Document() throws NonRecoverableError {
 		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
