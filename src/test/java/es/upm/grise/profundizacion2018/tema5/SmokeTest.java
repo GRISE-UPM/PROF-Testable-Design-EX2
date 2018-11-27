@@ -14,7 +14,8 @@ public class SmokeTest {
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
-		assertEquals("DOCUMENT ID: 1115\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+		int ID=(int) d.getDocumentId();
+		assertEquals("DOCUMENT ID: "+ID+"\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 
 	}
 
