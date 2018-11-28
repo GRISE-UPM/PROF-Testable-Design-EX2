@@ -54,12 +54,12 @@ public class DocumentIdProvider {
 		} catch (FileNotFoundException e) {
 
 			System.out.println(NON_EXISTING_FILE.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(NON_EXISTING_FILE.getMessage(), e);
 
 		} catch (IOException e) {
 
 			System.out.println(CANNOT_READ_FILE.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_READ_FILE.getMessage(), e);
 
 		}
 		
@@ -67,7 +67,7 @@ public class DocumentIdProvider {
 		
 	}
 	
-	Connection getConnection(Properties propertiesInFile) throws NonRecoverableError {
+	Connection getConnection(Properties propertiesInFile, String driver) throws NonRecoverableError {
 		// Get the DB username and password
 		String url = propertiesInFile.getProperty("url");
 		String username = propertiesInFile.getProperty("username");
@@ -76,22 +76,22 @@ public class DocumentIdProvider {
 		// Load DB driver
 		try {
 
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(driver).newInstance();
 
 		} catch (InstantiationException e) {
 
 			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_INSTANTIATE_DRIVER.getMessage(), e);
 
 		} catch (IllegalAccessException e) {
 
 			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_INSTANTIATE_DRIVER.getMessage(), e);
 
 		} catch (ClassNotFoundException e) {
 
 			System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_FIND_DRIVER.getMessage(), e);
 
 		}
 
@@ -103,7 +103,7 @@ public class DocumentIdProvider {
 		} catch (SQLException e) {
 
 			System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_CONNECT_DATABASE.getMessage(), e);
 
 		}
 		
@@ -124,7 +124,7 @@ public class DocumentIdProvider {
 		} catch (SQLException e) {
 
 			System.out.println(CANNOT_RUN_QUERY.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_RUN_QUERY.getMessage(), e);
 
 		}
 
@@ -142,7 +142,7 @@ public class DocumentIdProvider {
 		} catch (SQLException e) {
 
 			System.out.println(INCORRECT_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(INCORRECT_COUNTER.getMessage(), e);
 
 		}
 		
@@ -150,7 +150,7 @@ public class DocumentIdProvider {
 		if(numberOfValues != 1) {
 	
 			System.out.println(CORRUPTED_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CORRUPTED_COUNTER.getMessage());
 	
 		}
 		
@@ -163,7 +163,7 @@ public class DocumentIdProvider {
 		} catch (SQLException e) {
 
 			System.out.println(CONNECTION_LOST.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CONNECTION_LOST.getMessage(), e);
 
 		}
 		
@@ -179,13 +179,13 @@ public class DocumentIdProvider {
 		if (path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(UNDEFINED_ENVIRON.getMessage());
 
 		} else {
 
 			Properties propertiesInFile = getConfig(path);
 
-			getConnection(propertiesInFile);
+			getConnection(propertiesInFile, "com.mysql.jdbc.Driver");
 			
 			getCurrentId();
 
@@ -212,7 +212,7 @@ public class DocumentIdProvider {
 
 			System.out.println(e.toString());
 			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CANNOT_UPDATE_COUNTER.getMessage(), e);
 
 		}
 
@@ -220,7 +220,7 @@ public class DocumentIdProvider {
 		if (numUpdatedRows != 1) {
 
 			System.out.println(CORRUPTED_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
+			throw new NonRecoverableError(CORRUPTED_COUNTER.getMessage());
 
 		}
 
