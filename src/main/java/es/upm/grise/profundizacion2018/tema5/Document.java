@@ -6,7 +6,7 @@ public class Document {
 
 	// Document ID
 	private int documentId;
-	
+	static DocumentIdProvider docProvider;
 	// Document attributes
 	private String template;
 	private String author;
@@ -14,9 +14,10 @@ public class Document {
 	private String body;
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		
 	}
-
+    
+	
 	public void setTemplate(String template) {
 		this.template = template;
 	}
@@ -54,5 +55,11 @@ public class Document {
 			
 		}
 	}
-
+	public  void cargar(DocumentIdProvider d) throws NonRecoverableError {
+		docProvider = d;
+	
+		this.documentId = docProvider.getDocumentId();
+		
+	}
+	
 }

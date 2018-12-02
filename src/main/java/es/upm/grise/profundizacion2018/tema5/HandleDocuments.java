@@ -37,11 +37,9 @@ public class HandleDocuments {
 			System.exit(1);
 			
 		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-		
-		}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		
 
 	}
