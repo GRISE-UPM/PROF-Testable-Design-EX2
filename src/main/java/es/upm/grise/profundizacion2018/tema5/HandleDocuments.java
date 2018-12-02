@@ -1,5 +1,7 @@
 package es.upm.grise.profundizacion2018.tema5;
 
+import static es.upm.grise.profundizacion2018.tema5.Error.CANNOT_FIND_DRIVER;
+
 public class HandleDocuments {
 
 	public static void main(String[] args) {
@@ -15,7 +17,7 @@ public class HandleDocuments {
 		
 		try {
 			
-			Document document = new Document(DocumentIdProvider.getInstance());
+			Document document = new Document(DocumentIdProvider.getInstance("com.mysql.jdbc.Driver"));
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
