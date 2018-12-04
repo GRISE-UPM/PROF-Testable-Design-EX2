@@ -58,7 +58,13 @@ public class SmokeTest {
 	@Test
 	public void moreThan1RowCountersMySQL() throws NonRecoverableError, SQLException {
 		
-		DocumentIdProvider prov = new DocumentIdProvider();
+		Properties propertiesInFile = new Properties();
+		// We have duplicated the database for testing purposes
+		propertiesInFile.setProperty("url", "jdbc:mysql://localhost:3306/tema5");
+		propertiesInFile.setProperty("username", "root");
+		propertiesInFile.setProperty("password", "root");
+		DocumentIdProvider prov = new DocumentIdProvider(propertiesInFile);
+		
 		prov.connection.setAutoCommit(false);
 		String query = "INSERT INTO Counters (documentId) VALUES (0)";
 		Statement statement = prov.connection.createStatement();
@@ -69,13 +75,18 @@ public class SmokeTest {
 			new DocumentIdProvider();
 		} catch (NonRecoverableError e) {
 			assertEquals("Find error CORRUPTED_COUNTER", e.getMessage(), Error.CORRUPTED_COUNTER.getMessage());
+			
+			/* 
+			 * We don't need this anymore because we are in a transaction we won't finish
+			 * 
+			 * query = "DELETE FROM Counter WHERE documentId = 0";
+			 * statement = prov.connection.createStatement();
+			 * statement.executeQuery(query);
+			 * assertTrue(true); // Need to reach this point
+			*/
+		} finally {
 			prov.connection.rollback();
 			prov.connection.setAutoCommit(true);
-			
-			/*query = "DELETE FROM Counter WHERE documentId = 0";
-			statement = prov.connection.createStatement();
-			statement.executeQuery(query);
-			assertTrue(true); // Need to reach this point*/
 		}
 		
 	}

@@ -191,6 +191,26 @@ public class DocumentIdProvider {
 
 		}
 	}
+	
+	// Another constructor for testing purposes
+	DocumentIdProvider(Properties properties) throws NonRecoverableError {
+
+		// If ENVIRON does not exist, null is returned
+		String path = System.getenv(ENVIRON);
+
+		if (path == null) {
+
+			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			throw new NonRecoverableError(UNDEFINED_ENVIRON.getMessage());
+
+		} else {
+
+			getConnection(properties, "com.mysql.jdbc.Driver");
+			
+			getCurrentId();
+
+		}
+	}
 
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
