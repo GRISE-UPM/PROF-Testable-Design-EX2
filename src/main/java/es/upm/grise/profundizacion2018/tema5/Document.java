@@ -12,9 +12,9 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+
+	public void setDocumentId(DocumentIdProvider dip) throws NonRecoverableError{
+		this.documentId = dip.getInstance(DocumentIdProvider.MYSQL_DRIVER).getDocumentId();
 	}
 
 	public void setTemplate(String template) {
