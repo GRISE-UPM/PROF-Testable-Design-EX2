@@ -14,11 +14,7 @@ public class Document {
 	private String body;
 	
 	public Document() throws NonRecoverableError {
-		this(DocumentIdProvider.getInstance());
-	}
-
-	public Document(DocumentIdProvider documentIdProvider) throws NonRecoverableError{
-		this.documentId = documentIdProvider.getDocumentId();
+		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
 	}
 
 	public void setTemplate(String template) {
@@ -37,7 +33,7 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	
