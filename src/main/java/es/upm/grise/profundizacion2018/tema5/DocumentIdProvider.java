@@ -66,7 +66,7 @@ public class DocumentIdProvider {
 		return propertiesInFile;
 	}
 
-	private String getPath() throws NonRecoverableError {
+	String getPath() throws NonRecoverableError {
 	   String path = System.getenv(ENVIRON);
 		if (path == null) {
 
