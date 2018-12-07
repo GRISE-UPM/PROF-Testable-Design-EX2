@@ -11,6 +11,11 @@ public class SmokeTest {
 		DocumentIdProviderDouble(Properties customProperties) throws NonRecoverableError {
 			initClass(customProperties);
 		}
+
+		@Override
+		String getPath(){
+			return "fakePath";
+		}
 	}
 
 	@Test
@@ -32,6 +37,15 @@ public class SmokeTest {
 		int documentId2 = d.getDocumentId();
 		assertEquals(documentId2,documentId1+1);
 	}
+
+	@Test(expected = NonRecoverableError.class)
+	public void shouldThrowExceptionWhenPathNotExits() throws NonRecoverableError {
+		DocumentIdProviderDouble documentIdProviderDouble =
+				new DocumentIdProviderDouble(new Properties());
+		Document d = new Document(documentIdProviderDouble);
+	}
+
+
 
 
 }
