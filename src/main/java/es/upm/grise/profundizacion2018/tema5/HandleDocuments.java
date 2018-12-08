@@ -36,10 +36,10 @@ public class HandleDocuments {
 			// Exit with error
 			System.exit(1);
 			
-		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
+//		} catch (NonRecoverableError e) {
+//			
+//			// Exit with error
+//			System.exit(1);
 		
 		}
 		
