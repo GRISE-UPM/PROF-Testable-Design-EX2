@@ -8,13 +8,35 @@ import java.util.Properties;
 public class SmokeTest {
 
 	class DocumentIdProviderDouble extends DocumentIdProvider{
-		DocumentIdProviderDouble(Properties customProperties) throws NonRecoverableError {
-			initClass(customProperties);
+
+		private String path;
+		private String jdbc_driver;
+		private Properties properties;
+
+		DocumentIdProviderDouble(Properties properties,
+								 String path, String jdbc_driver) throws NonRecoverableError {
+			this.properties = properties;
+			this.path = path;
+			this.jdbc_driver = jdbc_driver;
+			initClass();
 		}
 
 		@Override
-		String getPath(){
-			return "fakePath";
+		String getPath() throws NonRecoverableError {
+			if(this.path == null) return super.getPath();
+			return this.path;
+		}
+
+		@Override
+		String getJdbc_driver(){
+			if(this.jdbc_driver == null)return super.getJdbc_driver();
+			return this.jdbc_driver;
+		}
+
+		@Override
+		Properties getProperties() throws NonRecoverableError {
+			if(this.properties == null)return super.getProperties();
+			return this.properties;
 		}
 	}
 
@@ -34,17 +56,24 @@ public class SmokeTest {
 		Document d = new Document();
 		int documentId1 = d.getDocumentId();
 		Document d2 = new Document();
-		int documentId2 = d.getDocumentId();
+		int documentId2 = d2.getDocumentId();
 		assertEquals(documentId2,documentId1+1);
 	}
 
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenPathNotExits() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(new Properties());
+				new DocumentIdProviderDouble(null, "fake/path", null);
 		Document d = new Document(documentIdProviderDouble);
 	}
 
+	@Test(expected = NonRecoverableError.class)
+	public void shouldThrowExceptionWhenMySQLDriverNotExits() throws NonRecoverableError {
+		DocumentIdProviderDouble documentIdProviderDouble =
+				new DocumentIdProviderDouble(new Properties(), null, "fake.jdbc.driver");
+		Document d = new Document(documentIdProviderDouble);
+
+	}
 
 
 
