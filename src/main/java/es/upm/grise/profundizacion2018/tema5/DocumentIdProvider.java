@@ -16,19 +16,18 @@ import java.util.Properties;
 
 public class DocumentIdProvider {
 
-	// Environment variable
+
+	private static final String UPDATE_COUNTERS_SET_DOCUMENT_ID = "UPDATE Counters SET documentId = ?";
+	private static final String SELECT_DOCUMENT_ID_FROM_COUNTERS = "SELECT documentId FROM Counters";
+
+	private String jdbc_driver = "com.mysql.jdbc.Driver";
 	private static String ENVIRON  = "APP_HOME";
 
-	// ID for the newly created documents
 	private int documentId;
 
-	// Connection to database (open during program execution)
 	Connection connection = null;
 
-	// Singleton access
 	private static DocumentIdProvider instance;
-	public static final String UPDATE_COUNTERS_SET_DOCUMENT_ID = "UPDATE Counters SET documentId = ?";
-	public static final String SELECT_DOCUMENT_ID_FROM_COUNTERS = "SELECT documentId FROM Counters";
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
@@ -45,18 +44,18 @@ public class DocumentIdProvider {
 
 	// Create the connection to the database
 	DocumentIdProvider() throws NonRecoverableError {
-		Properties properties = getProperties();
-		initClass(properties);
+		initClass();
 	}
 
-	void initClass(Properties properties) throws NonRecoverableError {
+	void initClass() throws NonRecoverableError {
 
+		Properties properties = getProperties();
 		prepareDriverDB();
 		createDBConnection(properties);
 		getCurrentDocumentId();
 	}
 
-	private Properties getProperties() throws NonRecoverableError {
+	Properties getProperties() throws NonRecoverableError {
 		String path = getPath();
 
 
@@ -158,7 +157,7 @@ public class DocumentIdProvider {
 		// Load DB driver
 		try {
 
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(getJdbc_driver()).newInstance();
 
 		} catch (InstantiationException e) {
 
@@ -232,5 +231,9 @@ public class DocumentIdProvider {
 
 		return documentId;
 
+	}
+
+	String getJdbc_driver() {
+		return this.jdbc_driver;
 	}
 }
