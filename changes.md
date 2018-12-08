@@ -11,7 +11,7 @@
 * Se ha extraido en una propiedad el nombre del driver y se ha añadido un getter para obtenerlo
 * Mismo comportamiento para _`numberOfValues`_ y _`numUpdatedRows`_
 
-## Clase SmokeTest
+## Clase `SmokeTest`
 * Se han implementado los métodos necesarios para comprobar todas las especificaciones
 * Se ha añadido la clase _`DocumentIdProviderDouble`_. En esta clase se han efectuado los siguientes cambios:
     * Se trata de un clase que extiende de _`DocumentIdProvider`_
