@@ -3,7 +3,6 @@ package es.upm.grise.profundizacion2018.tema5;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import java.util.Properties;
 
 public class SmokeTest {
 
@@ -11,15 +10,13 @@ public class SmokeTest {
 
 		private String path;
 		private String jdbc_driver;
-		private Properties properties;
 		private boolean moreThanOneDocument;
 		private boolean moreThanOneDocumentUpdated;
 
-		DocumentIdProviderDouble(Properties properties,
-								 String path, String jdbc_driver,
+		DocumentIdProviderDouble(String path,
+								 String jdbc_driver,
 								 boolean moreThanOneDocument,
 								 boolean moreThanOneDocumentUpdated) throws NonRecoverableError {
-			this.properties = properties;
 			this.path = path;
 			this.jdbc_driver = jdbc_driver;
 			this.moreThanOneDocument = moreThanOneDocument;
@@ -37,12 +34,6 @@ public class SmokeTest {
 		String getJdbc_driver(){
 			if(this.jdbc_driver == null)return super.getJdbc_driver();
 			return this.jdbc_driver;
-		}
-
-		@Override
-		Properties getProperties() throws NonRecoverableError {
-			if(this.properties == null)return super.getProperties();
-			return this.properties;
 		}
 
 		@Override
@@ -82,14 +73,14 @@ public class SmokeTest {
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenPathNotExits() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(null, "fake/path", null,false,false);
+				new DocumentIdProviderDouble( "fake/path", null,false,false);
 		Document d = new Document(documentIdProviderDouble);
 	}
 
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenMySQLDriverNotExits() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(new Properties(), null, "fake.jdbc.driver",false,false);
+				new DocumentIdProviderDouble(null, "fake.jdbc.driver",false,false);
 		Document d = new Document(documentIdProviderDouble);
 
 	}
@@ -97,14 +88,14 @@ public class SmokeTest {
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenThereIsMoreThanOneResult() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(null, null, null,true,false);
+				new DocumentIdProviderDouble( null, null,true,false);
 		Document d = new Document(documentIdProviderDouble);
 	}
 
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenThereIsMoreThanOneUpdated() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(null, null, null,false,true);
+				new DocumentIdProviderDouble( null, null,false,true);
 		Document d = new Document(documentIdProviderDouble);
 	}
 
