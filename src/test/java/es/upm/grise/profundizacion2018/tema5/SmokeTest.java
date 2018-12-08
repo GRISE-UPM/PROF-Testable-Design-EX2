@@ -12,12 +12,18 @@ public class SmokeTest {
 		private String path;
 		private String jdbc_driver;
 		private Properties properties;
+		private boolean moreThanOneDocument;
+		private boolean moreThanOneDocumentUpdated;
 
 		DocumentIdProviderDouble(Properties properties,
-								 String path, String jdbc_driver) throws NonRecoverableError {
+								 String path, String jdbc_driver,
+								 boolean moreThanOneDocument,
+								 boolean moreThanOneDocumentUpdated) throws NonRecoverableError {
 			this.properties = properties;
 			this.path = path;
 			this.jdbc_driver = jdbc_driver;
+			this.moreThanOneDocument = moreThanOneDocument;
+			this.moreThanOneDocumentUpdated = moreThanOneDocumentUpdated;
 			initClass();
 		}
 
@@ -38,6 +44,19 @@ public class SmokeTest {
 			if(this.properties == null)return super.getProperties();
 			return this.properties;
 		}
+
+		@Override
+		public int getNumberOfValues() {
+			if(this.moreThanOneDocument)return 2;
+			return 1;
+		}
+
+		@Override
+		public int getNumUpdatedRows() {
+			if(this.moreThanOneDocumentUpdated)return 2;
+			return 1;
+		}
+
 	}
 
 	@Test
@@ -63,16 +82,30 @@ public class SmokeTest {
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenPathNotExits() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(null, "fake/path", null);
+				new DocumentIdProviderDouble(null, "fake/path", null,false,false);
 		Document d = new Document(documentIdProviderDouble);
 	}
 
 	@Test(expected = NonRecoverableError.class)
 	public void shouldThrowExceptionWhenMySQLDriverNotExits() throws NonRecoverableError {
 		DocumentIdProviderDouble documentIdProviderDouble =
-				new DocumentIdProviderDouble(new Properties(), null, "fake.jdbc.driver");
+				new DocumentIdProviderDouble(new Properties(), null, "fake.jdbc.driver",false,false);
 		Document d = new Document(documentIdProviderDouble);
 
+	}
+
+	@Test(expected = NonRecoverableError.class)
+	public void shouldThrowExceptionWhenThereIsMoreThanOneResult() throws NonRecoverableError {
+		DocumentIdProviderDouble documentIdProviderDouble =
+				new DocumentIdProviderDouble(null, null, null,true,false);
+		Document d = new Document(documentIdProviderDouble);
+	}
+
+	@Test(expected = NonRecoverableError.class)
+	public void shouldThrowExceptionWhenThereIsMoreThanOneUpdated() throws NonRecoverableError {
+		DocumentIdProviderDouble documentIdProviderDouble =
+				new DocumentIdProviderDouble(null, null, null,false,true);
+		Document d = new Document(documentIdProviderDouble);
 	}
 
 
