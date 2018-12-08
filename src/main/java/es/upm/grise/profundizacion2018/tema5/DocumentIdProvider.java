@@ -18,62 +18,74 @@ public class DocumentIdProvider {
 
 	// Environment variable
 	private static String ENVIRON  = "APP_HOME";
-
+	static String CONFIG_FILE  = "config.properties";
+	static String CONNECTION_DRIVER  = "com.mysql.jdbc.Driver";
+	static String QUERY = "UPDATE Counters SET documentId = ?";
+	protected Properties propertiesInFile;
+	protected InputStream inputFile;
 	// ID for the newly created documents
-	private int documentId;
-
+	protected int documentId;
+	protected int numberOfvalues = 0;
 	// Connection to database (open during program execution)
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	protected static DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
+	public DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
-
 			return instance;
-
 		else {
-
 			instance = new DocumentIdProvider();
+			instance.connectDB();
 			return instance;
-
-		}	
+		}
 	}
 
-	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
-
+	protected String getEnvironment() {
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+		return System.getenv(ENVIRON);
+	}
 
+	protected void getMySQLDriver() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Class.forName(CONNECTION_DRIVER).newInstance();
+	}
+
+	protected void getFile(String path) throws FileNotFoundException, IOException {
+		inputFile = new FileInputStream(path + CONFIG_FILE);
+		propertiesInFile.load(inputFile);
+	}
+
+	protected Properties getProperties() throws NonRecoverableError {
+		String path = getEnvironment();
 		if (path == null) {
-
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
 			throw new NonRecoverableError();
-
 		} else {
-
-			Properties propertiesInFile = new Properties();
-			InputStream inputFile = null;
+			propertiesInFile = new Properties();
+			inputFile = null;
 
 			// Load the property file
 			try {
-				inputFile = new FileInputStream(path + "config.properties");
-				propertiesInFile.load(inputFile);
-
+				getFile(getEnvironment());
 			} catch (FileNotFoundException e) {
 
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
+				System.out.println(NON_EXISTING_FILE.getMessage());
 				throw new NonRecoverableError();
 
 			} catch (IOException e) {
 
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
+				System.out.println(CANNOT_READ_FILE.getMessage());
 				throw new NonRecoverableError();
 
 			}
 
+			return propertiesInFile;
+		}
+	}
+	// Create the connection to the database
+	protected void connectDB() throws NonRecoverableError {
+			Properties propertiesInFile = getProperties();
 			// Get the DB username and password
 			String url = propertiesInFile.getProperty("url");
 			String username = propertiesInFile.getProperty("username");
@@ -81,9 +93,7 @@ public class DocumentIdProvider {
 
 			// Load DB driver
 			try {
-
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
+				getMySQLDriver();
 			} catch (InstantiationException e) {
 
 				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
@@ -131,13 +141,12 @@ public class DocumentIdProvider {
 			}
 
 			// Get the last objectID
-			int numberOfValues = 0;
 			try {
 
 				while (resultSet.next()) {
 
 					documentId = resultSet.getInt("documentId");
-					numberOfValues++;
+					numberOfvalues++;
 
 				}
 
@@ -149,7 +158,7 @@ public class DocumentIdProvider {
 			}
 
 			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
+			if(numberOfvalues != 1) {
 
 				System.out.println(CORRUPTED_COUNTER.getMessage());          	
 				throw new NonRecoverableError();
@@ -169,7 +178,6 @@ public class DocumentIdProvider {
 
 			}
 		}
-	}
 
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
@@ -177,7 +185,7 @@ public class DocumentIdProvider {
 		documentId++;
 
 		// Access the COUNTERS table
-		String query = "UPDATE Counters SET documentId = ?";
+		String query = QUERY;
 		int numUpdatedRows;
 
 		// Update the documentID counter
