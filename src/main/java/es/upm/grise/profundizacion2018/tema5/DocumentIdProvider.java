@@ -29,23 +29,15 @@ public class DocumentIdProvider {
 
 	private static DocumentIdProvider instance;
 
-
 	private int numberOfValues;
-
-
-
 	private int numUpdatedRows;
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
-		if (instance != null)
-
-			return instance;
+		if (instance != null)return instance;
 
 		else {
-
 			instance = new DocumentIdProvider();
 			return instance;
-
 		}
 	}
 
@@ -72,15 +64,28 @@ public class DocumentIdProvider {
 		return propertiesInFile;
 	}
 
-	String getPath() throws NonRecoverableError {
-	   String path = System.getenv(ENVIRON);
-		if (path == null) {
+	private void prepareDriverDB() throws NonRecoverableError {
+		// Load DB driver
+		try {
 
-			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			Class.forName(getJdbc_driver()).newInstance();
+
+		} catch (InstantiationException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
+			throw new NonRecoverableError();
+
+		} catch (IllegalAccessException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
+			throw new NonRecoverableError();
+
+		} catch (ClassNotFoundException e) {
+
+			System.out.println(CANNOT_FIND_DRIVER.getMessage());
 			throw new NonRecoverableError();
 
 		}
-		return path;
 	}
 
 	private void createDBConnection(Properties properties) throws NonRecoverableError {
@@ -153,48 +158,45 @@ public class DocumentIdProvider {
 		}
 	}
 
-	public int getNumberOfValues() {
-		return numberOfValues;
-	}
+	public int getDocumentId() throws NonRecoverableError {
 
-	private void verifyOneDocumentId(boolean b) throws NonRecoverableError {
-		if (b) {
-			System.out.println(Error.CORRUPTED_COUNTER.getMessage());
-			throw new NonRecoverableError();
-		}
-	}
-
-
-	private void prepareDriverDB() throws NonRecoverableError {
-		// Load DB driver
+		documentId++;
 		try {
 
-			Class.forName(getJdbc_driver()).newInstance();
+			PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COUNTERS_SET_DOCUMENT_ID);
+			preparedStatement.setInt(1, documentId);
+			numUpdatedRows = preparedStatement.executeUpdate();
 
-		} catch (InstantiationException e) {
+		} catch (SQLException e) {
 
-			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
-			throw new NonRecoverableError();
-
-		} catch (IllegalAccessException e) {
-
-			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
-			throw new NonRecoverableError();
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println(CANNOT_FIND_DRIVER.getMessage());
+			System.out.println(e.toString());
+			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());
 			throw new NonRecoverableError();
 
 		}
+
+		verifyOneDocumentId(getNumUpdatedRows() != 1);
+
+		return documentId;
+
 	}
+
+	String getPath() throws NonRecoverableError {
+	   String path = System.getenv(ENVIRON);
+		if (path == null) {
+
+			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			throw new NonRecoverableError();
+
+		}
+		return path;
+	}
+
 
 	private void setInputFileInProperties(String path, Properties propertiesInFile) throws NonRecoverableError {
-		InputStream inputFile = null;
 
-		// Load the property file
 		try {
-			inputFile = new FileInputStream(path + "config.properties");
+			InputStream inputFile = new FileInputStream(path + "config.properties");
 			propertiesInFile.load(inputFile);
 
 		} catch (FileNotFoundException e) {
@@ -210,40 +212,22 @@ public class DocumentIdProvider {
 		}
 	}
 
-	// Return the next valid objectID
-	public int getDocumentId() throws NonRecoverableError {
-
-		documentId++;
-
-		// Access the COUNTERS table
-
-		// Update the documentID counter
-		try {
-
-			PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COUNTERS_SET_DOCUMENT_ID);
-			preparedStatement.setInt(1, documentId);
-			numUpdatedRows = preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-
-			System.out.println(e.toString());
-			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());
-			throw new NonRecoverableError();
-
-		}
-
-		// Check that the update has been effectively completed
-		verifyOneDocumentId(getNumUpdatedRows() != 1);
-
-		return documentId;
-
-	}
-
 	public int getNumUpdatedRows() {
 		return numUpdatedRows;
 	}
 
 	String getJdbc_driver() {
 		return this.jdbc_driver;
+	}
+
+	public int getNumberOfValues() {
+		return numberOfValues;
+	}
+
+	private void verifyOneDocumentId(boolean b) throws NonRecoverableError {
+		if (b) {
+			System.out.println(Error.CORRUPTED_COUNTER.getMessage());
+			throw new NonRecoverableError();
+		}
 	}
 }
