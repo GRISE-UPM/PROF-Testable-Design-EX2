@@ -9,3 +9,7 @@ Asignación del driver con el metodo creado en la clase Document (setDocId)
 document.setDocId(DocumentIdProvider.getInstance(DocumentIdProvider.DRIVER));
 ## Clase NOnRecoverableError
 Se han añadido los dos constructores (uno vacio y uno recibiendo el mensaje)
+
+
+## Smoke Test
+Se han creado tres pruebas, una para comprobar que se crea un tmplate correctamente, y otras dos para los casos de error del driver y del fichero de properties.
