@@ -29,6 +29,13 @@ public class DocumentIdProvider {
 
 	private static DocumentIdProvider instance;
 
+
+	private int numberOfValues;
+
+
+
+	private int numUpdatedRows;
+
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
@@ -112,7 +119,7 @@ public class DocumentIdProvider {
 		}
 
 		// Get the last objectID
-			int numberOfValues = 0;
+		numberOfValues = 0;
 		try {
 
 			while (resultSet.next()) {
@@ -130,12 +137,7 @@ public class DocumentIdProvider {
 		}
 
 		// Only one objectID can be retrieved
-		if(numberOfValues != 1) {
-
-			System.out.println(CORRUPTED_COUNTER.getMessage());
-			throw new NonRecoverableError();
-
-		}
+		verifyOneDocumentId(getNumberOfValues() != 1);
 
 		// Close all DB connections
 		try {
@@ -151,6 +153,16 @@ public class DocumentIdProvider {
 		}
 	}
 
+	public int getNumberOfValues() {
+		return numberOfValues;
+	}
+
+	private void verifyOneDocumentId(boolean b) throws NonRecoverableError {
+		if (b) {
+			System.out.println(Error.CORRUPTED_COUNTER.getMessage());
+			throw new NonRecoverableError();
+		}
+	}
 
 
 	private void prepareDriverDB() throws NonRecoverableError {
@@ -204,7 +216,6 @@ public class DocumentIdProvider {
 		documentId++;
 
 		// Access the COUNTERS table
-		int numUpdatedRows;
 
 		// Update the documentID counter
 		try {
@@ -222,15 +233,14 @@ public class DocumentIdProvider {
 		}
 
 		// Check that the update has been effectively completed
-		if (numUpdatedRows != 1) {
-
-			System.out.println(CORRUPTED_COUNTER.getMessage());
-			throw new NonRecoverableError();
-
-		}
+		verifyOneDocumentId(getNumUpdatedRows() != 1);
 
 		return documentId;
 
+	}
+
+	public int getNumUpdatedRows() {
+		return numUpdatedRows;
 	}
 
 	String getJdbc_driver() {
