@@ -6,7 +6,7 @@
 -Se crea un SetDocID que toma como parámetro el DocIDProvider
 
 -Las clases qeu se modifican para la realizacion de este ejercicio son:
-#Document
-#DocumentIdProvider
-#SomkeTest
-#HandleDocuments
+# Document
+# DocumentIdProvider
+# SomkeTest
+# HandleDocuments
