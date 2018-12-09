@@ -12,27 +12,18 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
-	}
 
-	public void setTemplate(String template) {
+
+	//Para que esta clase sea completamente testable hace falta que el proveedor de ids sea inuectado
+
+	public Document(DocumentIdProvider documentIdProvider, String template, String author, String title, String body) throws NonRecoverableError{
+		this.documentId = documentIdProvider.getDocumentId();
 		this.template = template;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setAuthor(String author) {
 		this.author = author;
-	}
-
-	public void setBody(String body) {
+		this.title = title;
 		this.body = body;
 	}
-	
+
 	public Object getDocumentId() {
 		return documentId;
 	}
@@ -44,9 +35,7 @@ public class Document {
 			title == null ||
 			author == null ||
 			body == null) {
-			
-			System.out.println(INCOMPLETE_DOCUMENT.getMessage());          	
-			throw new RecoverableError();
+			throw new RecoverableError(INCOMPLETE_DOCUMENT.getMessage());
 			
 		} else {
 

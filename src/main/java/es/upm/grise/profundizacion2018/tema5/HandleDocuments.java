@@ -15,7 +15,8 @@ public class HandleDocuments {
 		
 		try {
 			
-			Document document = new Document();
+			Document document = new Document(new DocumentIdProvider(new EnvironmentHandler(), new ConfigurationHandler(), null), TEMPLATE, AUTHOR, TITLE, BODY);
+			/*
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
@@ -24,6 +25,7 @@ public class HandleDocuments {
 			System.out.println(AUTHOR);
 			System.out.println(TITLE);
 			System.out.println(BODY);
+			*/
 			System.out.println(document.getFormattedDocument());
 			
 			// What follows does not matter either ....
