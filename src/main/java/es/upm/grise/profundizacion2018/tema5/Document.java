@@ -13,8 +13,10 @@ public class Document {
 	private String title;
 	private String body;
 	
+	static DocumentIdProvider idProvider;
+	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		//this.documentId = DocumentIdProvider.getInstance().getDocumentId();
 	}
 
 	public void setTemplate(String template) {
@@ -53,6 +55,11 @@ public class Document {
 			return String.format(TemplateFactory.getTemplate(template), documentId, title, author, body);
 			
 		}
+	}
+	
+	public  void getIdProvider(DocumentIdProvider d) throws NonRecoverableError {
+		idProvider = d;
+		this.documentId = idProvider.getDocumentId();
 	}
 
 }
