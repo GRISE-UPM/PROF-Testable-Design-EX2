@@ -17,8 +17,9 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
-
+	private String ENVIRON  = "APP_HOME";
+	private String DRIVER = "com.mysql.jdbc.Driver";
+	
 	// ID for the newly created documents
 	private int documentId;
 
@@ -43,10 +44,12 @@ public class DocumentIdProvider {
 
 	// Create the connection to the database
 	private DocumentIdProvider() throws NonRecoverableError {
-
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
+		CreateConexion(path);
+	}
 
+	public void CreateConexion(String path) throws NonRecoverableError {
 		if (path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
@@ -80,26 +83,7 @@ public class DocumentIdProvider {
 			String password = propertiesInFile.getProperty("password");
 
 			// Load DB driver
-			try {
-
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			} catch (InstantiationException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IllegalAccessException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (ClassNotFoundException e) {
-
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			LoadDBDriver(this.DRIVER);
 
 			// Create DB connection
 			try {
@@ -149,12 +133,7 @@ public class DocumentIdProvider {
 			}
 
 			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
-
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			CheckUpdateRules(numberOfValues);
 
 			// Close all DB connections
 			try {
@@ -168,6 +147,30 @@ public class DocumentIdProvider {
 				throw new NonRecoverableError();
 
 			}
+		}
+		
+	}
+
+	public void LoadDBDriver(String internalDriver) throws NonRecoverableError {
+		try {
+
+			Class.forName(internalDriver).newInstance();
+
+		} catch (InstantiationException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IllegalAccessException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (ClassNotFoundException e) {
+
+			System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
 		}
 	}
 
@@ -196,14 +199,18 @@ public class DocumentIdProvider {
 		}
 
 		// Check that the update has been effectively completed
-		if (numUpdatedRows != 1) {
+		CheckUpdateRules(numUpdatedRows);
+
+		return documentId;
+
+	}
+
+	public void CheckUpdateRules(int rule) throws NonRecoverableError {
+		if (rule != 1) {
 
 			System.out.println(CORRUPTED_COUNTER.getMessage());          	
 			throw new NonRecoverableError();
 
 		}
-
-		return documentId;
-
 	}
 }
