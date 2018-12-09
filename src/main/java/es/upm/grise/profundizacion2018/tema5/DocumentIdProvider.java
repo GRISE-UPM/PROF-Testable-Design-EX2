@@ -28,6 +28,9 @@ public class DocumentIdProvider {
 	// Singleton access
 	private static DocumentIdProvider instance;
 
+	private int numberOfValues;
+	private int numUpdatedRows;
+
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
@@ -42,10 +45,14 @@ public class DocumentIdProvider {
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	DocumentIdProvider() throws NonRecoverableError {
+		logicBase();
 
+	}
+
+	void logicBase() throws NonRecoverableError {
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+		String path = getPath();
 
 		if (path == null) {
 
@@ -64,12 +71,12 @@ public class DocumentIdProvider {
 
 			} catch (FileNotFoundException e) {
 
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
+				System.out.println(NON_EXISTING_FILE.getMessage());
 				throw new NonRecoverableError();
 
 			} catch (IOException e) {
 
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
+				System.out.println(CANNOT_READ_FILE.getMessage());
 				throw new NonRecoverableError();
 
 			}
@@ -82,21 +89,21 @@ public class DocumentIdProvider {
 			// Load DB driver
 			try {
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Class.forName(getDriver()).newInstance();
 
 			} catch (InstantiationException e) {
 
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
 				throw new NonRecoverableError();
 
 			} catch (IllegalAccessException e) {
 
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
 				throw new NonRecoverableError();
 
 			} catch (ClassNotFoundException e) {
 
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+				System.out.println(CANNOT_FIND_DRIVER.getMessage());
 				throw new NonRecoverableError();
 
 			}
@@ -108,7 +115,7 @@ public class DocumentIdProvider {
 
 			} catch (SQLException e) {
 
-				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
+				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());
 				throw new NonRecoverableError();
 
 			}
@@ -125,13 +132,13 @@ public class DocumentIdProvider {
 
 			} catch (SQLException e) {
 
-				System.out.println(CANNOT_RUN_QUERY.getMessage());          	
+				System.out.println(CANNOT_RUN_QUERY.getMessage());
 				throw new NonRecoverableError();
 
 			}
 
 			// Get the last objectID
-			int numberOfValues = 0;
+			numberOfValues = 0;
 			try {
 
 				while (resultSet.next()) {
@@ -143,18 +150,20 @@ public class DocumentIdProvider {
 
 			} catch (SQLException e) {
 
-				System.out.println(INCORRECT_COUNTER.getMessage());          	
+				System.out.println(INCORRECT_COUNTER.getMessage());
 				throw new NonRecoverableError();
 
 			}
 
 			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
+			//if(getNumberOfValues(numberOfValues) != 1) {
 
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
+			//	System.out.println(CORRUPTED_COUNTER.getMessage());
+			//	throw new NonRecoverableError();
 
-			}
+			//}
+
+			verifyOneDocumentId(getNumberOfValues() != 1);
 
 			// Close all DB connections
 			try {
@@ -164,10 +173,35 @@ public class DocumentIdProvider {
 
 			} catch (SQLException e) {
 
-				System.out.println(CONNECTION_LOST.getMessage());          	
+				System.out.println(CONNECTION_LOST.getMessage());
 				throw new NonRecoverableError();
 
 			}
+		}
+	}
+
+	int getNumberOfValues() {
+		return numberOfValues;
+	}
+
+	String getDriver() {
+		return "com.mysql.jdbc.Driver";
+	}
+
+	String getPath() {
+		return System.getenv(ENVIRON);
+	}
+
+	public int getNumUpdatedRows() {
+		return numUpdatedRows;
+	}
+
+
+
+	private void verifyOneDocumentId(boolean b) throws NonRecoverableError {
+		if (b) {
+			System.out.println(Error.CORRUPTED_COUNTER.getMessage());
+			throw new NonRecoverableError();
 		}
 	}
 
@@ -178,7 +212,7 @@ public class DocumentIdProvider {
 
 		// Access the COUNTERS table
 		String query = "UPDATE Counters SET documentId = ?";
-		int numUpdatedRows;
+		//int numUpdatedRows;
 
 		// Update the documentID counter
 		try {
@@ -196,12 +230,14 @@ public class DocumentIdProvider {
 		}
 
 		// Check that the update has been effectively completed
-		if (numUpdatedRows != 1) {
+		//if (numUpdatedRows != 1) {
 
-			System.out.println(CORRUPTED_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
+		//	System.out.println(CORRUPTED_COUNTER.getMessage());
+		//	throw new NonRecoverableError();
 
-		}
+		//}
+
+		verifyOneDocumentId(getNumUpdatedRows() != 1);
 
 		return documentId;
 
