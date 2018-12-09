@@ -17,16 +17,16 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
+	protected static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	protected int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	/*private static DocumentIdProvider instance;
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
@@ -39,10 +39,10 @@ public class DocumentIdProvider {
 			return instance;
 
 		}	
-	}
+	}*/
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	protected DocumentIdProvider() throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
