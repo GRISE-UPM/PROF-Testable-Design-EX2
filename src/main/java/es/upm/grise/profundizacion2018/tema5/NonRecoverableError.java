@@ -5,13 +5,6 @@ public class NonRecoverableError extends Exception {
 	/**
 	 * 
 	 */
-
-	public NonRecoverableError() {
-
-	}
-	public NonRecoverableError(String error) {
-		super(error);
-	}
 	private static final long serialVersionUID = 1L;
 
 }
