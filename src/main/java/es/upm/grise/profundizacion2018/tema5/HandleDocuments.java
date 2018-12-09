@@ -16,7 +16,7 @@ public class HandleDocuments {
 		try {
 			
 			Document document = new Document();
-			document.setDocumentId(DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER));
+			document.setDocumentId(DocumentIdProvider.getInstance());
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);

@@ -14,7 +14,7 @@ public class Document {
 	private String body;
 
 	public void setDocumentId(DocumentIdProvider dip) throws NonRecoverableError{
-		this.documentId = dip.getInstance(DocumentIdProvider.MYSQL_DRIVER).getDocumentId();
+		this.documentId = dip.getInstance().getDocumentId();
 	}
 
 	public void setTemplate(String template) {
@@ -33,7 +33,7 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	

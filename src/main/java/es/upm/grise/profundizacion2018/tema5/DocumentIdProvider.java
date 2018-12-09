@@ -12,16 +12,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.Properties;
 
 public class DocumentIdProvider {
 
 	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
+	static String ENVIRON  = "APP_HOME";
 	static String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
 
 	// ID for the newly created documents
-	private int documentId;
+	int documentId;
 
 	// Connection to DB
 	Connection connection = null;
@@ -29,12 +30,12 @@ public class DocumentIdProvider {
 	// Singleton access
 	private static DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance(String driver) throws NonRecoverableError {
+	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 			return instance;
 
 		else {
-			instance = new DocumentIdProvider(driver);
+			instance = new DocumentIdProvider();
 			return instance;
 
 		}	
@@ -92,77 +93,64 @@ public class DocumentIdProvider {
 		return connection;
 	}
 
-	// Create the connection to the database
-	private DocumentIdProvider(String driver) throws NonRecoverableError {
+	void readLastDocumentId() throws NonRecoverableError{
+		// Read from the COUNTERS table
+		String query = "SELECT documentId FROM Counters";
+		Statement statement = null;
+		ResultSet resultSet = null;
 
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+
+		} catch (SQLException e) {
+			throw new NonRecoverableError(CANNOT_RUN_QUERY.getMessage());
+
+		}
+
+		// Get the last objectID
+		int numberOfValues = 0;
+		try {
+			while (resultSet.next()) {
+				documentId = resultSet.getInt("documentId");
+				numberOfValues++;
+
+			}
+
+		} catch (SQLException e) {
+			throw new NonRecoverableError(INCORRECT_COUNTER.getMessage());
+
+		}
+
+		// Only one objectID can be retrieved
+		if(numberOfValues != 1) {
+			throw new NonRecoverableError(CORRUPTED_COUNTER.getMessage());
+
+		}
+		// Close all DB connections
+		try {
+			resultSet.close();
+			statement.close();
+
+		} catch (SQLException e) {
+			throw new NonRecoverableError(CONNECTION_LOST.getMessage());
+
+		}
+	}
+
+	// Create the connection to the database
+	private DocumentIdProvider() throws NonRecoverableError {
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
 
 		if (path == null) {
-
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
 			throw new NonRecoverableError();
 
 		} else {
-
 			Properties propertiesInFile = loadPropertiesFromFile(path);
-			connection = loadDbConnectionFromProperties(propertiesInFile, driver);
-
-			// Read from the COUNTERS table
-			String query = "SELECT documentId FROM Counters";
-			Statement statement = null;
-			ResultSet resultSet = null;
-
-			try {
-
-				statement = connection.createStatement();
-				resultSet = statement.executeQuery(query);
-
-			} catch (SQLException e) {
-
-				System.out.println(CANNOT_RUN_QUERY.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Get the last objectID
-			int numberOfValues = 0;
-			try {
-
-				while (resultSet.next()) {
-
-					documentId = resultSet.getInt("documentId");
-					numberOfValues++;
-
-				}
-
-			} catch (SQLException e) {
-
-				System.out.println(INCORRECT_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
-
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Close all DB connections
-			try {
-
-				resultSet.close();
-				statement.close();
-
-			} catch (SQLException e) {
-
-				System.out.println(CONNECTION_LOST.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			connection = loadDbConnectionFromProperties(propertiesInFile, MYSQL_DRIVER);
+			readLastDocumentId();
 		}
 	}
 

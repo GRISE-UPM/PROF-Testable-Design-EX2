@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class DocumentIdProviderTest {
 	
-	/*@Test
+	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
 		Document d = new Document();
@@ -18,7 +18,7 @@ public class DocumentIdProviderTest {
 		d.setBody("C");
 		assertEquals("DOCUMENT ID: 1115\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 
-	}*/
+	}
 
 	@Test(expected = NonRecoverableError.class)
 	public void notExistingConfigFile() throws NonRecoverableError{
@@ -32,6 +32,21 @@ public class DocumentIdProviderTest {
 		prop.setProperty("username", "");
 		prop.setProperty("password", "");
 		DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER).loadDbConnectionFromProperties(prop, "notvaliddriver");
+	}
+
+	@Test
+	public void consecutiveDocsGetConsecutiveIds() throws NonRecoverableError, RecoverableError {
+		Document doc1 = new Document();
+		Document doc2 = new Document();
+		int id1 = (int)doc1.getDocumentId();
+		int id2 = (int)doc2.getDocumentId();
+		assertEquals( -1, id1 - id2);
+
+	}
+
+	@Test
+	public void moreThanOneRowInDB() throws NonRecoverableError{
+		DocumentIdProvider dip = DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER);
 	}
 
 }
