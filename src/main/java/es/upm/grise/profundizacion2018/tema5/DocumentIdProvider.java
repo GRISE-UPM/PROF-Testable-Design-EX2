@@ -21,6 +21,9 @@ public class DocumentIdProvider {
 
 	// ID for the newly created documents
 	protected int documentId;
+	
+	// Initial value of counters
+	int numberOfValues = 0;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
@@ -69,16 +72,7 @@ public class DocumentIdProvider {
 			loadBdDriver("com.mysql.jdbc.Driver");
 
 			// Create DB connection
-			try {
-
-				connection = DriverManager.getConnection(url, username, password);
-
-			} catch (SQLException e) {
-
-				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			connection = createDbConnection(url, username, password);
 
 			// Read from the COUNTERS table
 			String query = "SELECT documentId FROM Counters";
@@ -98,43 +92,14 @@ public class DocumentIdProvider {
 			}
 
 			// Get the last objectID
-			int numberOfValues = 0;
-			try {
-
-				while (resultSet.next()) {
-
-					documentId = resultSet.getInt("documentId");
-					numberOfValues++;
-
-				}
-
-			} catch (SQLException e) {
-
-				System.out.println(INCORRECT_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+		    numberOfValues += getLastObjectId(resultSet, documentId);
+			
 
 			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
-
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+		    checkNumOfValues();			
 
 			// Close all DB connections
-			try {
-
-				resultSet.close();
-				statement.close();
-
-			} catch (SQLException e) {
-
-				System.out.println(CONNECTION_LOST.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			closeAllDbConnections(resultSet, statement);
 		}
 	}
 
@@ -212,6 +177,64 @@ public class DocumentIdProvider {
 		} catch (ClassNotFoundException e) {
 
 			System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+	protected Connection createDbConnection(String url, String username, String password) throws NonRecoverableError{
+		try {
+
+			Connection c = DriverManager.getConnection(url, username, password);			
+			return c;
+
+		} catch (SQLException e) {
+
+			System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+	protected void closeAllDbConnections(ResultSet resultSet, Statement statement) throws NonRecoverableError {
+		try {
+
+			resultSet.close();
+			statement.close();
+
+		} catch (SQLException e) {
+
+			System.out.println(CONNECTION_LOST.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+	protected int getLastObjectId(ResultSet resultSet, int id) throws NonRecoverableError {
+		int numberOfValues = 0;
+		try {
+
+			while (resultSet.next()) {
+
+				documentId = resultSet.getInt("documentId");
+				numberOfValues++;
+
+
+			}
+
+		} catch (SQLException e) {
+
+			System.out.println(INCORRECT_COUNTER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+		return numberOfValues;
+	}
+	
+	protected void checkNumOfValues() throws NonRecoverableError{
+		if(numberOfValues != 1) {
+
+			System.out.println(CORRUPTED_COUNTER.getMessage());          	
 			throw new NonRecoverableError();
 
 		}
