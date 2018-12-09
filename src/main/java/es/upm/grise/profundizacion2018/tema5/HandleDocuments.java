@@ -15,6 +15,8 @@ public class HandleDocuments {
 		
 		try {
 			
+			// Document document = new Document();
+			// Calling to singleton object with a given connection driver
 			Document document = new Document();
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
@@ -32,11 +34,6 @@ public class HandleDocuments {
 			System.exit(0);
 			
 		} catch (RecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-			
-		} catch (NonRecoverableError e) {
 			
 			// Exit with error
 			System.exit(1);
