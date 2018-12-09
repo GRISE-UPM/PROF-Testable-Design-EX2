@@ -57,22 +57,8 @@ public class DocumentIdProvider {
 			Properties propertiesInFile = new Properties();
 			InputStream inputFile = null;
 
+			checkIfConfigFileExists(propertiesInFile, inputFile, path);
 			// Load the property file
-			try {
-				inputFile = new FileInputStream(path + "config.properties");
-				propertiesInFile.load(inputFile);
-
-			} catch (FileNotFoundException e) {
-
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IOException e) {
-
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
 
 			// Get the DB username and password
 			String url = propertiesInFile.getProperty("url");
@@ -80,26 +66,7 @@ public class DocumentIdProvider {
 			String password = propertiesInFile.getProperty("password");
 
 			// Load DB driver
-			try {
-
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			} catch (InstantiationException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IllegalAccessException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (ClassNotFoundException e) {
-
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			loadBdDriver("com.mysql.jdbc.Driver");
 
 			// Create DB connection
 			try {
@@ -205,5 +172,48 @@ public class DocumentIdProvider {
 
 		return documentId;
 
+	}
+	
+	protected void checkIfConfigFileExists(Properties prop, InputStream inputFile, String path) throws NonRecoverableError{
+		// Load the property file
+		try {
+			inputFile = new FileInputStream(path + "config.properties");
+			prop.load(inputFile);
+
+		} catch (FileNotFoundException e) {
+
+			System.out.println(NON_EXISTING_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IOException e) {
+
+			System.out.println(CANNOT_READ_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+	protected void loadBdDriver(String driverName) throws NonRecoverableError
+	{
+		try {
+
+			Class.forName(driverName).newInstance();
+
+		} catch (InstantiationException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IllegalAccessException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (ClassNotFoundException e) {
+
+			System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
 	}
 }
