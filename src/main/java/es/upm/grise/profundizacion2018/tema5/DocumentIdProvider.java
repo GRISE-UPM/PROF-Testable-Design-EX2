@@ -18,8 +18,8 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	static String ENVIRON  = "APP_HOME";
-	static String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
+	String ENVIRON  = "APP_HOME";
+	String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
 
 	// ID for the newly created documents
 	int documentId;
@@ -27,8 +27,13 @@ public class DocumentIdProvider {
 	// Connection to DB
 	Connection connection = null;
 
+	String SELECT_QUERY = "SELECT documentId FROM Counters";
+	String UPDATE_QUERY = "UPDATE Counters SET documentId = ?";
+
 	// Singleton access
 	private static DocumentIdProvider instance;
+
+
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
@@ -41,11 +46,26 @@ public class DocumentIdProvider {
 		}	
 	}
 
+	DocumentIdProvider() throws NonRecoverableError {
+		String path = loadPathFromEnv();
+		Properties propertiesInFile = loadPropertiesFromFile(path);
+		loadDbConnectionFromProperties(propertiesInFile, MYSQL_DRIVER);
+		readLastDocumentId();
+	}
+
+
+	String loadPathFromEnv() throws NonRecoverableError {
+		String path = System.getenv(ENVIRON);
+		if (path == null) {
+			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			throw new NonRecoverableError();
+		}
+		return null;
+	}
+
 	Properties loadPropertiesFromFile(String path) throws NonRecoverableError {
 		Properties propertiesInFile = new Properties();
 		InputStream inputFile = null;
-
-		// Load the property file
 		try {
 			inputFile = new FileInputStream(path + "config.properties");
 			propertiesInFile.load(inputFile);
@@ -60,9 +80,7 @@ public class DocumentIdProvider {
 		return propertiesInFile;
 	}
 
-	Connection loadDbConnectionFromProperties(Properties properties, String driver) throws NonRecoverableError{
-
-		Connection connection = null;
+	void loadDbConnectionFromProperties(Properties properties, String driver) throws NonRecoverableError{
 
 		String url = properties.getProperty("url");
 		String username = properties.getProperty("username");
@@ -90,18 +108,16 @@ public class DocumentIdProvider {
 			throw new NonRecoverableError(CANNOT_CONNECT_DATABASE.getMessage());
 
 		}
-		return connection;
 	}
 
 	void readLastDocumentId() throws NonRecoverableError{
 		// Read from the COUNTERS table
-		String query = "SELECT documentId FROM Counters";
 		Statement statement = null;
 		ResultSet resultSet = null;
 
 		try {
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery(query);
+			resultSet = statement.executeQuery(SELECT_QUERY);
 
 		} catch (SQLException e) {
 			throw new NonRecoverableError(CANNOT_RUN_QUERY.getMessage());
@@ -138,21 +154,7 @@ public class DocumentIdProvider {
 		}
 	}
 
-	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
-		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
 
-		if (path == null) {
-			System.out.println(UNDEFINED_ENVIRON.getMessage());
-			throw new NonRecoverableError();
-
-		} else {
-			Properties propertiesInFile = loadPropertiesFromFile(path);
-			connection = loadDbConnectionFromProperties(propertiesInFile, MYSQL_DRIVER);
-			readLastDocumentId();
-		}
-	}
 
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
@@ -160,13 +162,12 @@ public class DocumentIdProvider {
 		documentId++;
 
 		// Access the COUNTERS table
-		String query = "UPDATE Counters SET documentId = ?";
 		int numUpdatedRows;
 
 		// Update the documentID counter
 		try {
 
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY);
 			preparedStatement.setInt(1, documentId);
 			numUpdatedRows = preparedStatement.executeUpdate();
 

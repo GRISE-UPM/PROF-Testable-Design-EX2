@@ -22,7 +22,7 @@ public class DocumentIdProviderTest {
 
 	@Test(expected = NonRecoverableError.class)
 	public void notExistingConfigFile() throws NonRecoverableError{
-		DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER).loadPropertiesFromFile("thisisnotavalidpath/so/.it/will/fail");
+		DocumentIdProvider.getInstance().loadPropertiesFromFile("thisisnotavalidpath/so/.it/will/fail");
 	}
 
 	@Test(expected = NonRecoverableError.class)
@@ -31,7 +31,7 @@ public class DocumentIdProviderTest {
 		prop.setProperty("url", "");
 		prop.setProperty("username", "");
 		prop.setProperty("password", "");
-		DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER).loadDbConnectionFromProperties(prop, "notvaliddriver");
+		DocumentIdProvider.getInstance().loadDbConnectionFromProperties(prop, "notvaliddriver");
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class DocumentIdProviderTest {
 
 	@Test
 	public void moreThanOneRowInDB() throws NonRecoverableError{
-		DocumentIdProvider dip = DocumentIdProvider.getInstance(DocumentIdProvider.MYSQL_DRIVER);
+		DocumentIdProvider dip = DocumentIdProvider.getInstance();
 	}
 
 }
