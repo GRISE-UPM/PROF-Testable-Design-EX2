@@ -65,6 +65,10 @@ public class DocumentIdProvider {
 		}
 		return propertiesInFile;
 	}
+	
+	
+
+	
 	public static DocumentIdProvider getInstance(String driver) throws NonRecoverableError {
 		if (instance != null)
 
@@ -181,6 +185,8 @@ public class DocumentIdProvider {
 		}
 		return connection;
 	}
+	
+	
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
 

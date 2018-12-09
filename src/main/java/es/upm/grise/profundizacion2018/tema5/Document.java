@@ -17,6 +17,7 @@ public class Document {
 	public void setDocId(DocumentIdProvider doc) throws NonRecoverableError{
 		this.documentId = DocumentIdProvider.getInstance(DocumentIdProvider.DRIVER).getDocumentId();
 	}
+	
 
 	public void setTemplate(String template) {
 		this.template = template;
