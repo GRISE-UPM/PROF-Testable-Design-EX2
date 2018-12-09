@@ -27,7 +27,7 @@ public class DocumentIdProvider {
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	static DocumentIdProvider instance;
 
 	public static DocumentIdProvider getInstance(String driver) throws NonRecoverableError {
 		if (instance != null)
@@ -43,7 +43,7 @@ public class DocumentIdProvider {
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider(String driver) throws NonRecoverableError {
+	DocumentIdProvider(String driver) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);

@@ -9,39 +9,47 @@ import org.junit.Test;
 
 public class SmokeTest {
 
-	//	@Test
-	//	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
-	//		
-	//		Document d = new Document();
-	//		d.setTemplate("DECLARATION");
-	//		d.setTitle("A");
-	//		d.setAuthor("B");
-	//		d.setBody("C");
-	//		assertEquals("DOCUMENT ID: 1115\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
-	//
-	//	}
 	@Before public void initialize() {
 		//		 Properties prop = new Properties();
 		//			prop.setProperty("url", "");
 		//			prop.setProperty("username", "");
 		//			prop.setProperty("password", "");
 	}
+
+
+	/* 4. Realizar las siguientes pruebas:
+			a. La aplicación genera las plantillas correctamente.
+			b. La aplicación asigna el número de documento correcto.
+			c. Los números de documento asignados a documentos consecutivos son también números consecutivos.
+		5. Realizar adicionalmente las siguientes pruebas:
+			a. La aplicación detecta correctamente que el fichero de configuración no existe.
+			b. La aplicación detecta correctamente que el driver MySQL no existe.
+			c. La aplicación detecta correctamente que hay más de una fila en la tabla Counters.
+			d. La aplicación detecta correctamente que la actualización del documentID en la tabla Counters ha sido incorrectamente realizado.
+	 */
 	
-	// PRUEBA UNITARIA Comprobación de que se genera bien el template
+	// 4ab La aplicación genera las plantillas correctamente y asigna el numero correcto.
 	@Test
-	public void standardTemplateCreation() {
+	public void templateCorrecto() {
 		new TemplateFactory();
 		String template = TemplateFactory.getTemplate("DECLARATION");
 		String expected = "DOCUMENT ID: %d\n\nTitle : %s\nAuthor: %s\n\n%s";
 		assertEquals(template,expected );
 	}
-	// PRUEBA UNITARIA Con propiedades de configuración erroneas
+	// 4c La aplicación asigna el número de documento correcto.
+	@Test
+	public void consecutivos() throws NonRecoverableError, RecoverableError {
+		//No conseguido.
+	}
+
+	// Ejercicio 5
+	// La aplicación detecta correctamente que el fichero de configuración no existe.
 	@Test(expected = NonRecoverableError.class)
 	public void badProps() throws NonRecoverableError{
 		String driver = DocumentIdProvider.DRIVER;
 		DocumentIdProvider.getInstance(driver).readProp("badProps");
 	}
-	// PRUEBA UNITARIA Con driver errorneo
+	// La aplicación detecta correctamente que el driver MySQL no existe.
 	@Test(expected = NonRecoverableError.class)
 	public void badDriver() throws NonRecoverableError {
 		String driver = DocumentIdProvider.DRIVER;
@@ -51,5 +59,7 @@ public class SmokeTest {
 		goodProps.setProperty("password", "123");
 		DocumentIdProvider.getInstance(driver).readFromDB("badDriver", goodProps);
 	}
+	//UPdate 
+
 
 }
