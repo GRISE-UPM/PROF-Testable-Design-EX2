@@ -18,7 +18,6 @@ public class DocumentIdProvider {
 
 	// Environment variable
 	private static String ENVIRON  = "APP_HOME";
-	static String DRIVER = "com.mysql.jdbc.Driver";
 
 	// ID for the newly created documents
 	private int documentId;
@@ -27,27 +26,23 @@ public class DocumentIdProvider {
 	Connection connection = null;
 
 	// Singleton access
-	//private static DocumentIdProvider instance;
-	static DocumentIdProvider instance;
+	private static DocumentIdProvider instance;
 
-	//public static DocumentIdProvider getInstance() throws NonRecoverableError {
-	public static DocumentIdProvider getInstance(String driver) throws NonRecoverableError {
+	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
 			return instance;
 
 		else {
 
-			//instance = new DocumentIdProvider();
-			instance = new DocumentIdProvider(driver);
+			instance = new DocumentIdProvider();
 			return instance;
 
 		}	
 	}
 
 	// Create the connection to the database
-	//private DocumentIdProvider() throws NonRecoverableError {
-	private DocumentIdProvider(String driver) throws NonRecoverableError {
+	private DocumentIdProvider() throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
@@ -59,68 +54,65 @@ public class DocumentIdProvider {
 
 		} else {
 
-//			Properties propertiesInFile = new Properties();
-//			InputStream inputFile = null;
-//
-//			// Load the property file
-//			try {
-//				inputFile = new FileInputStream(path + "config.properties");
-//				propertiesInFile.load(inputFile);
-//
-//			} catch (FileNotFoundException e) {
-//
-//				System.out.println(NON_EXISTING_FILE.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			} catch (IOException e) {
-//
-//				System.out.println(CANNOT_READ_FILE.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			}
-//
-//			// Get the DB username and password
-//			String url = propertiesInFile.getProperty("url");
-//			String username = propertiesInFile.getProperty("username");
-//			String password = propertiesInFile.getProperty("password");
-//
-//			// Load DB driver
-//			try {
-//
-//				Class.forName("com.mysql.jdbc.Driver").newInstance();
-//
-//			} catch (InstantiationException e) {
-//
-//				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			} catch (IllegalAccessException e) {
-//
-//				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			} catch (ClassNotFoundException e) {
-//
-//				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			}
-//
-//			// Create DB connection
-//			try {
-//
-//				connection = DriverManager.getConnection(url, username, password);
-//
-//			} catch (SQLException e) {
-//
-//				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
-//				throw new NonRecoverableError();
-//
-//			}
+			Properties propertiesInFile = new Properties();
+			InputStream inputFile = null;
 
-			Properties propertiesInFile = readProp(path);
-			connection = readFromDB(driver, propertiesInFile);
-			
+			// Load the property file
+			try {
+				inputFile = new FileInputStream(path + "config.properties");
+				propertiesInFile.load(inputFile);
+
+			} catch (FileNotFoundException e) {
+
+				System.out.println(NON_EXISTING_FILE.getMessage());          	
+				throw new NonRecoverableError();
+
+			} catch (IOException e) {
+
+				System.out.println(CANNOT_READ_FILE.getMessage());          	
+				throw new NonRecoverableError();
+
+			}
+
+			// Get the DB username and password
+			String url = propertiesInFile.getProperty("url");
+			String username = propertiesInFile.getProperty("username");
+			String password = propertiesInFile.getProperty("password");
+
+			// Load DB driver
+			try {
+
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+
+			} catch (InstantiationException e) {
+
+				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+				throw new NonRecoverableError();
+
+			} catch (IllegalAccessException e) {
+
+				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+				throw new NonRecoverableError();
+
+			} catch (ClassNotFoundException e) {
+
+				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+				throw new NonRecoverableError();
+
+			}
+
+			// Create DB connection
+			try {
+
+				connection = DriverManager.getConnection(url, username, password);
+
+			} catch (SQLException e) {
+
+				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
+				throw new NonRecoverableError();
+
+			}
+
 			// Read from the COUNTERS table
 			String query = "SELECT documentId FROM Counters";
 			Statement statement = null;
@@ -177,43 +169,6 @@ public class DocumentIdProvider {
 
 			}
 		}
-	}
-	
-	Properties readProp(String path) throws NonRecoverableError {
-		Properties propertiesInFile  = new Properties();
-		InputStream inputFile = null;
-		try {
- 			inputFile = new FileInputStream(path + "config.properties");
-			propertiesInFile .load(inputFile);
- 		} catch (FileNotFoundException e) {
- 			throw new NonRecoverableError(NON_EXISTING_FILE.getMessage());
- 		} catch (IOException e) {
- 			throw new NonRecoverableError(CANNOT_READ_FILE.getMessage());
-		}
- 		return propertiesInFile ;
-	}
- 	Connection readFromDB(String driver, Properties prop) throws NonRecoverableError{
- 		Connection connection = null;
- 		String url = prop.getProperty("url");
-		String username = prop.getProperty("username");
-		String password = prop.getProperty("password");
- 		// Load DB driver
-		try {
- 			Class.forName(driver).newInstance();
- 		} catch (InstantiationException e) {
- 			throw new NonRecoverableError(CANNOT_INSTANTIATE_DRIVER.getMessage());
- 		} catch (IllegalAccessException e) {
- 			throw new NonRecoverableError(CANNOT_INSTANTIATE_DRIVER.getMessage());
- 		} catch (ClassNotFoundException e) {
- 			throw new NonRecoverableError(CANNOT_FIND_DRIVER.getMessage());
-		}
- 		// Create DB connection
-		try {
- 			connection = DriverManager.getConnection(url, username, password);
- 		} catch (SQLException e) {
- 			throw new NonRecoverableError(CANNOT_CONNECT_DATABASE.getMessage());
- 		}
-		return connection;
 	}
 
 	// Return the next valid objectID
