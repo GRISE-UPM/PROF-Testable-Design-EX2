@@ -7,16 +7,34 @@ import org.junit.Test;
 import java.util.Properties;
 
 public class DocumentIdProviderTest {
+
+	class DocumentIdProviderDouble extends DocumentIdProvider {
+
+		private String path;
+
+		protected DocumentIdProviderDouble(String path, String driver, String env) throws NonRecoverableError{
+			MYSQL_DRIVER = driver;
+			documentId = 1000;
+			ENVIRON = env;
+		}
+
+		@Override
+		public int getDocumentId() {
+			documentId++;
+			return documentId;
+		}
+	}
 	
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
-		
+		DocumentIdProviderDouble dipd = new DocumentIdProviderDouble(null, null, null);
 		Document d = new Document();
+		d.setDocumentId(dipd);
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
-		assertEquals("DOCUMENT ID: 1115\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+		assertEquals("DOCUMENT ID: 1001\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 
 	}
 
@@ -34,19 +52,25 @@ public class DocumentIdProviderTest {
 		DocumentIdProvider.getInstance().loadDbConnectionFromProperties(prop, "notvaliddriver");
 	}
 
-	@Test
+	@Test(expected = NonRecoverableError.class)
 	public void consecutiveDocsGetConsecutiveIds() throws NonRecoverableError, RecoverableError {
+		DocumentIdProviderDouble dipd = new DocumentIdProviderDouble(null, null, null);
 		Document doc1 = new Document();
 		Document doc2 = new Document();
+		doc1.setDocumentId(dipd);
+		doc2.setDocumentId(dipd);
 		int id1 = (int)doc1.getDocumentId();
 		int id2 = (int)doc2.getDocumentId();
 		assertEquals( -1, id1 - id2);
 
 	}
 
-	@Test
+	@Test(expected = NonRecoverableError.class)
 	public void moreThanOneRowInDB() throws NonRecoverableError{
-		DocumentIdProvider dip = DocumentIdProvider.getInstance();
+		DocumentIdProviderDouble dipd = new DocumentIdProviderDouble(null, null, null);
+		dipd.numberOfValues = 2;
+		Document d = new Document();
+		d.setDocumentId(dipd);
 	}
 
 }

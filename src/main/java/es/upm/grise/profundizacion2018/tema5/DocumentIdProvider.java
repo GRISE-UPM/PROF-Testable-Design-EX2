@@ -24,6 +24,9 @@ public class DocumentIdProvider {
 	// ID for the newly created documents
 	int documentId;
 
+	// Get the last objectID
+	int numberOfValues = 0;
+
 	// Connection to DB
 	Connection connection = null;
 
@@ -123,9 +126,6 @@ public class DocumentIdProvider {
 			throw new NonRecoverableError(CANNOT_RUN_QUERY.getMessage());
 
 		}
-
-		// Get the last objectID
-		int numberOfValues = 0;
 		try {
 			while (resultSet.next()) {
 				documentId = resultSet.getInt("documentId");
