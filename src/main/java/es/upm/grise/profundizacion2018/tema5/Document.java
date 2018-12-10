@@ -7,7 +7,7 @@ public class Document {
 	// Document ID
 	private int documentId;
 	
-	// Document attributes
+	// Atributos del documento
 	private String template;
 	private String author;
 	private String title;
