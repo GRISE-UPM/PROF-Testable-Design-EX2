@@ -16,7 +16,6 @@ public class HandleDocuments {
 		try {
 			
 			Document document = new Document();
-			document.setDocId(DocumentIdProvider.getInstance(DocumentIdProvider.DRIVER));
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
