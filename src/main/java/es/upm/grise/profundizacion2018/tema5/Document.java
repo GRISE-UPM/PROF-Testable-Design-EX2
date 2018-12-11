@@ -5,18 +5,39 @@ import static es.upm.grise.profundizacion2018.tema5.Error.INCOMPLETE_DOCUMENT;
 public class Document {
 
 	// Document ID
-	private int documentId;
+	protected int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	protected String template;
+	protected String author;
+	protected String title;
+	protected String body;
 	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
-	}
+//	public Document() throws NonRecoverableError {
+//		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+//	}
 
+	public Document() {
+		super();
+	}
+	
+	public Document(String template, String author, String title, String body) throws NonRecoverableError {
+		this.template = template;
+		this.author = author;
+		this.title = title;
+		this.body = body;
+		DocumentIdProvider docProv = new DocumentIdProvider();
+		this.documentId = docProv.getDocumentId();
+	}
+	
+//	public Document(String template, String author, String title, String body, int documentId){
+//		this.template = template;
+//		this.author = author;
+//		this.title = title;
+//		this.body = body;
+//		this.documentId = documentId;
+//	}
+	
 	public void setTemplate(String template) {
 		this.template = template;
 	}
@@ -33,8 +54,12 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
+	}
+	// Añadido setter para la Id del documento
+	public void setDocumentId(int documentId) {
+		this.documentId = documentId;
 	}
 	
 	public String getFormattedDocument() throws RecoverableError {

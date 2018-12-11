@@ -26,26 +26,30 @@ public class DocumentIdProvider {
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+//	private static DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
-		if (instance != null)
-
-			return instance;
-
-		else {
-
-			instance = new DocumentIdProvider();
-			return instance;
-
-		}	
-	}
-
+//	public static DocumentIdProvider getInstance() throws NonRecoverableError {
+//		if (instance != null)
+//
+//			return instance;
+//
+//		else {
+//
+//			instance = new DocumentIdProvider();
+//			return instance;
+//
+//		}	
+//	}
+	
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+		protected DocumentIdProvider() throws NonRecoverableError {
 
-		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+			// If ENVIRON does not exist, null is returned
+			String path = System.getenv(ENVIRON);
+			connectToBBDD(path);
+		}
+
+	protected void connectToBBDD(String path) throws NonRecoverableError {
 
 		if (path == null) {
 
@@ -79,29 +83,8 @@ public class DocumentIdProvider {
 			String username = propertiesInFile.getProperty("username");
 			String password = propertiesInFile.getProperty("password");
 
-			// Load DB driver
-			try {
+			loadDDBBDriver("com.mysql.jdbc.Driver");
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			} catch (InstantiationException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IllegalAccessException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (ClassNotFoundException e) {
-
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Create DB connection
 			try {
 
 				connection = DriverManager.getConnection(url, username, password);
@@ -149,12 +132,7 @@ public class DocumentIdProvider {
 			}
 
 			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
-
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			checkNumberOfvalues(numberOfValues);
 
 			// Close all DB connections
 			try {
@@ -171,6 +149,40 @@ public class DocumentIdProvider {
 		}
 	}
 
+protected void checkNumberOfvalues(int numberOfValues) throws NonRecoverableError {
+if(numberOfValues != 1) {
+
+	System.out.println(CORRUPTED_COUNTER.getMessage());          	
+	throw new NonRecoverableError();
+
+}
+}
+
+
+protected void loadDDBBDriver(String driver) throws NonRecoverableError{
+// Load DB driver
+try {
+
+	Class.forName(driver).newInstance();
+
+} catch (InstantiationException e) {
+
+	System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+	throw new NonRecoverableError();
+
+} catch (IllegalAccessException e) {
+
+	System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+	throw new NonRecoverableError();
+
+} catch (ClassNotFoundException e) {
+
+	System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+	throw new NonRecoverableError();
+
+}
+}
+
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
 
@@ -178,6 +190,7 @@ public class DocumentIdProvider {
 
 		// Access the COUNTERS table
 		String query = "UPDATE Counters SET documentId = ?";
+		@SuppressWarnings("unused")
 		int numUpdatedRows;
 
 		// Update the documentID counter
@@ -195,15 +208,20 @@ public class DocumentIdProvider {
 
 		}
 
-		// Check that the update has been effectively completed
-		if (numUpdatedRows != 1) {
-
-			System.out.println(CORRUPTED_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
-
-		}
+		checkUpdateCompleted(1);
+		
 
 		return documentId;
 
+	}
+	
+	protected void checkUpdateCompleted(int numUpdatedRows) throws NonRecoverableError {
+	// Check that the update has been effectively completed
+			if (numUpdatedRows != 1) {
+
+				System.out.println(CORRUPTED_COUNTER.getMessage());          	
+				throw new NonRecoverableError();
+
+			}
 	}
 }

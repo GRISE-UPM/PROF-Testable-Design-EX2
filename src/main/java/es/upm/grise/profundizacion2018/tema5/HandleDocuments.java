@@ -2,7 +2,7 @@ package es.upm.grise.profundizacion2018.tema5;
 
 public class HandleDocuments {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NonRecoverableError {
 		
 		// Previous code does not matter .... 
 		// You can assume in particular that parameters have been checked
@@ -36,11 +36,6 @@ public class HandleDocuments {
 			// Exit with error
 			System.exit(1);
 			
-		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-		
 		}
 		
 
