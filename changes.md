@@ -1,17 +1,14 @@
 # Changes made to the code
-## Document.java
-Cambiado el método de asignación del documentId, en vez de hard-codeado en el constructor, se realiza
-mediante una función setDocumentId que toma como parámetro el DocumentIdProvider del que cogerlo.
+
+## Document
+He puesto el DocumentIdProvider como dependencia por parámetro y que el 
+método getDocumentId devuelva un int en vez de un Object.
 
 ## DocumentIdProvider
-La clase ha sido modificada para tener más facilidad de generación de un doble.
-- El código de cargar el fichero de propiedades ha sido refactorizado a una función.
-- El código de conexión a la DB ha sido refactorizado a una función.
-- El código para la búsqueda del último ID ha sido refactorizado a una función.
-- EL código para encontrar el document ID ha sido refactorizado a una función.
+HE creado funciones para poner el environment, nombre de fichero de config y 
+driver de DB. Implica tener que poner extra lineas en un orden concreto.
+Los dos últimos test los he realizado añadiendo un booleano que simularía
+una especie de mocking, que luego modificamos en un doble de la clase.
 
-## RecoverableError / NonRecoverableError
-Añadidos los constructores con mensaje por parámetro.
-
-## HandleDocuments
-Carga el DocumentIdProvider del Document con el MYSQL Driver.
+## Environment
+Wrapper para variable de entorno.

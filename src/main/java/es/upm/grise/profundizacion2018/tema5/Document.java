@@ -12,8 +12,8 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-
-	public void setDocumentId(DocumentIdProvider dip) throws NonRecoverableError{
+	
+	public Document(DocumentIdProvider dip) throws NonRecoverableError {
 		this.documentId = dip.getInstance().getDocumentId();
 	}
 
