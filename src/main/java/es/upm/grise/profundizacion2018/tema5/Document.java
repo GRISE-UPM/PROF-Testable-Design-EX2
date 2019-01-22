@@ -5,16 +5,21 @@ import static es.upm.grise.profundizacion2018.tema5.Error.INCOMPLETE_DOCUMENT;
 public class Document {
 
 	// Document ID
-	private int documentId;
-	
+	public int documentId;
+	public DocumentIdProvider documentIdProvider;
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	public String template;
+	public String author;
+	public String title;
+	public String body;
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		documentIdProvider = new DocumentIdProvider();
+		this.documentId = documentIdProvider.getDocumentId();
+	}
+	public Document(int documentId) throws NonRecoverableError {
+		
+		this.documentId = documentId;
 	}
 
 	public void setTemplate(String template) {
@@ -33,7 +38,7 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	
