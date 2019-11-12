@@ -1,8 +1,12 @@
-package es.upm.grise.profundizacion2018.tema5;
+package es.upm.grise.profundizacion.HandleDocuments;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import es.upm.grise.profundizacion.HandleDocuments.Document;
+import es.upm.grise.profundizacion.HandleDocuments.NonRecoverableError;
+import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
 
 public class SmokeTest {
 	

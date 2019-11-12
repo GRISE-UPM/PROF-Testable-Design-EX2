@@ -1,6 +1,6 @@
-package es.upm.grise.profundizacion2018.tema5;
+package es.upm.grise.profundizacion.HandleDocuments;
 
-import static es.upm.grise.profundizacion2018.tema5.Error.*;
+import static es.upm.grise.profundizacion.HandleDocuments.Error.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

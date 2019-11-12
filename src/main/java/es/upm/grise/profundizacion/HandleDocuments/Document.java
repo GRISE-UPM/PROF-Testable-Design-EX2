@@ -1,6 +1,6 @@
-package es.upm.grise.profundizacion2018.tema5;
+package es.upm.grise.profundizacion.HandleDocuments;
 
-import static es.upm.grise.profundizacion2018.tema5.Error.INCOMPLETE_DOCUMENT;
+import static es.upm.grise.profundizacion.HandleDocuments.Error.INCOMPLETE_DOCUMENT;
 
 public class Document {
 
