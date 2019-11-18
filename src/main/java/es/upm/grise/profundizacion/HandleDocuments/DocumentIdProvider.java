@@ -20,29 +20,29 @@ public class DocumentIdProvider {
 	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	protected int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	protected static DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
+	public static DocumentIdProvider getInstance(String driver) throws NonRecoverableError {
 		if (instance != null)
 
 			return instance;
 
 		else {
 
-			instance = new DocumentIdProvider();
+			instance = new DocumentIdProvider(driver);
 			return instance;
 
 		}	
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	private DocumentIdProvider(String driver) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
@@ -50,6 +50,7 @@ public class DocumentIdProvider {
 		if (path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			System.out.println(path);
 			throw new NonRecoverableError();
 
 		} else {
@@ -82,7 +83,7 @@ public class DocumentIdProvider {
 			// Load DB driver
 			try {
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Class.forName(driver).newInstance();
 
 			} catch (InstantiationException e) {
 
