@@ -1,6 +1,11 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
+import static es.upm.grise.profundizacion.HandleDocuments.Error.CORRUPTED_COUNTER;
 import static org.junit.Assert.*;
+
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.util.Properties;
 
 import org.junit.Test;
 
@@ -10,6 +15,8 @@ import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
 
 public class SmokeTest {
 	
+	//Pruebas apartado 4
+	
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
@@ -18,8 +25,50 @@ public class SmokeTest {
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
-		assertEquals("DOCUMENT ID: 1115\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+		assertEquals("DOCUMENT ID: 3\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 
+	}
+	
+	@Test
+	public void numerosConsecutivosADocumentosConsecutivos() throws NonRecoverableError, RecoverableError {
+		
+		Document d1 = new Document();
+		Document d2 = new Document();
+		int ID_DOCUMENTO_PRIMERO = (int) d1.getDocumentId();
+		int ID_DOCUMENTO_SEGUNDO = (int) d2.getDocumentId();
+		
+		assertEquals(ID_DOCUMENTO_PRIMERO, ID_DOCUMENTO_SEGUNDO-1);
+	}
+	
+	
+	//Pruebas apartado 5
+	@Test(expected = NonRecoverableError.class)
+	public void excepcionFicheroConfiguracionNoExiste() throws NonRecoverableError{
+		DocumentIdProviderDouble documentIdProviderDouble = new DocumentIdProviderDouble();
+		Properties propertiesInFile = new Properties();
+		InputStream inputFile = null;
+		documentIdProviderDouble.loadPropertyFile(propertiesInFile, inputFile, "daIgual");
+	}
+	
+	@Test(expected = NonRecoverableError.class)
+	public void excepcionDriverMysqlNoExiste() throws NonRecoverableError{
+		DocumentIdProviderDouble documentIdProvider = new DocumentIdProviderDouble();
+		documentIdProvider.loadDBDriver("NO_EXISTE");
+	}
+	
+	@Test(expected = NonRecoverableError.class)
+	public void excepcionMasDeUnaFilaEnCounters() throws NonRecoverableError{
+		DocumentIdProviderDouble documentIdProvider = new DocumentIdProviderDouble();
+		int numberOfValues = documentIdProvider.getLastObjectID(null, false);
+	}
+	
+	@Test(expected = NonRecoverableError.class)
+	public void excepcionIncorrectaActualizacionCounters() throws NonRecoverableError{
+		DocumentIdProviderDouble documentIdProvider = new DocumentIdProviderDouble();
+		documentIdProvider.getDocumentId();
+		documentIdProvider.getDocumentId();
+		documentIdProvider.getDocumentId();
+		documentIdProvider.getDocumentId();	//Se simula que a la cuarta va a actualizar mal
 	}
 
 }

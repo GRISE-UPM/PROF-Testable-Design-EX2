@@ -8,13 +8,15 @@ public class Document {
 	private int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	String template;
+	String author;
+	String title;
+	String body;
+	
+	DocumentIdProviderDouble documentIdProviderDouble = DocumentIdProviderDouble.getInstance();
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		this.documentId = documentIdProviderDouble.getDocumentId();
 	}
 
 	public void setTemplate(String template) {
