@@ -49,7 +49,7 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 	@Override
 	// Para poder testear la excepción de la última prueba simulando la actualización incorrecta
 	public int getDocumentId() throws NonRecoverableError {
-		if (documentId == 4) {
+		if (documentId == 5) {
 			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());          	
 			throw new NonRecoverableError();
 		}

@@ -25,8 +25,17 @@ public class SmokeTest {
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
-		assertEquals("DOCUMENT ID: 3\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
-
+		assertEquals("Correcto: formato", "DOCUMENT ID: 4\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+	}
+	
+	@Test
+	public void numeroDocumentoCorrecto() throws NonRecoverableError, RecoverableError {
+		
+		Document d1 = new Document();
+		int ID_DOCUMENTO = (int) d1.getDocumentId();
+		int ID_CORRECTO = 1;
+		
+		assertEquals("Correcto: numero de documento", ID_CORRECTO, ID_DOCUMENTO);
 	}
 	
 	@Test
@@ -37,7 +46,7 @@ public class SmokeTest {
 		int ID_DOCUMENTO_PRIMERO = (int) d1.getDocumentId();
 		int ID_DOCUMENTO_SEGUNDO = (int) d2.getDocumentId();
 		
-		assertEquals(ID_DOCUMENTO_PRIMERO, ID_DOCUMENTO_SEGUNDO-1);
+		assertEquals("Correcto: números consecutivos a documentos consecutivos", ID_DOCUMENTO_PRIMERO, ID_DOCUMENTO_SEGUNDO-1);
 	}
 	
 	
@@ -68,7 +77,8 @@ public class SmokeTest {
 		documentIdProvider.getDocumentId();
 		documentIdProvider.getDocumentId();
 		documentIdProvider.getDocumentId();
-		documentIdProvider.getDocumentId();	//Se simula que a la cuarta va a actualizar mal
+		documentIdProvider.getDocumentId();
+		documentIdProvider.getDocumentId();	//Se simula que a la quinta va a actualizar mal
 	}
 
 }
