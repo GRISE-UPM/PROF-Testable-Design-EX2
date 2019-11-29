@@ -8,13 +8,23 @@ public class Document {
 	private int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	protected String template;
+	protected String author;
+	protected String title;
+	protected String body;
+	
+	/*protected DocumentIdProviderDouble dcIdProvider = DocumentIdProviderDouble.getInstance() ;
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		//dcIdProvider = new DocumentIdProviderDouble();
+		this.documentId = dcIdProvider.getDocumentId();
+	}**/
+	
+	
+	public Document() throws NonRecoverableError {
+		DocumentIdProviderDouble documentIdProviderDouble = DocumentIdProviderDouble.getInstance();
+
+		this.documentId = documentIdProviderDouble.getDocumentId();
 	}
 
 	public void setTemplate(String template) {
@@ -33,7 +43,7 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	
