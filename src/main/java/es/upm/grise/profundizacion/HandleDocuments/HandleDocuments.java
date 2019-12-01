@@ -1,49 +1,33 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
+/**
+ * La aplicación que maneja los documentos.
+ */
 public class HandleDocuments {
 
+	/**
+	 * El punto de entrada principal.
+	 * 
+	 * @param args Los argumentos.
+	 */
 	public static void main(String[] args) {
-		
-		// Previous code does not matter .... 
-		// You can assume in particular that parameters have been checked
-		
-		// The document elements
-		String TEMPLATE = args[0].toUpperCase();
-		String TITLE = args[1];
-		String AUTHOR = args[2];
-		String BODY = args[3];
-		
+		String TEMPLATE = args[1].toUpperCase();
+		String TITLE = args[3];
+		String AUTHOR = args[5];
+		String BODY = args[7];
 		try {
-			
-			Document document = new Document();
+			Document document = new Document(new TemplateFactory(), DocumentIdProvider.getInstance());
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
 			document.setBody(BODY);
-			System.out.println(TEMPLATE);
-			System.out.println(AUTHOR);
-			System.out.println(TITLE);
-			System.out.println(BODY);
 			System.out.println(document.getFormattedDocument());
-			
-			// What follows does not matter either ....
-			
-			// Exit without error
-			System.exit(0);
-			
+			System.exit(0);	
 		} catch (RecoverableError e) {
-			
-			// Exit with error
 			System.exit(1);
-			
 		} catch (NonRecoverableError e) {
-			
-			// Exit with error
 			System.exit(1);
-		
 		}
-		
-
 	}
 
 }
