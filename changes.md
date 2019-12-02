@@ -6,7 +6,7 @@
 - Toda esa logica se pone en un metodo nuevo, y se refactoriza en distintos metodos protected, para así poder probar las funcionalidades por separado
 - Se han cambiado los atributos private por protected
 
-###Document
+### Document
 - Se cambian los atributos private por protected
 - getDocumentId() pasa ahora a ser de tipo Int y no Object
 
