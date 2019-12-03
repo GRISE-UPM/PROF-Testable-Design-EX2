@@ -1,2 +1,2 @@
 # PROF-Testable-Design
-Testable design exercise #1
+Testable design exercise
