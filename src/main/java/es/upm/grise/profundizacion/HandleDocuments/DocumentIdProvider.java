@@ -46,7 +46,7 @@ public class DocumentIdProvider {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
-
+		
 		if (path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
