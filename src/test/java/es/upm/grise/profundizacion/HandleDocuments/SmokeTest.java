@@ -39,7 +39,7 @@ public class SmokeTest {
 	 */
 	@Test
 	public void numeroCorrecto() throws NonRecoverableError, RecoverableError {
-		int resultado=157;
+		int resultado=165;
 		Document documento = new Document();
 		int documentId=documento.getDocumentId();
 		System.out.println(documentId);
@@ -78,8 +78,9 @@ public class SmokeTest {
 	
 	@Test(expected = NonRecoverableError.class)
 	public void masDeUnaFilaenLaTablaCounters() throws NonRecoverableError{
+		int numberOfValues=5;
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
-		documento.checkearID();
+		documento.checkearID(numberOfValues);
 	}
 	
 

@@ -58,7 +58,7 @@ public class DocumentIdProvider {
 		conexionBD(url,username,password);
 		leerTablaCounters();
 		conseguirLastID();
-		checkearID();
+		checkearID(numberOfValues);
 	}
 	
 	private void todo() throws NonRecoverableError {
@@ -90,7 +90,7 @@ public class DocumentIdProvider {
 			conseguirLastID();
 
 			// Only one objectID can be retrieved
-			checkearID();
+			checkearID(numberOfValues);
 
 			// Close all DB connections
 			cerrarConexion();
@@ -198,7 +198,8 @@ public class DocumentIdProvider {
 		}
 	}
 	
-	protected void checkearID() throws NonRecoverableError {
+	protected void checkearID(int numberOfValues) throws NonRecoverableError {
+		
 		if(numberOfValues != 1) {
 
 			System.out.println(CORRUPTED_COUNTER.getMessage());          	
