@@ -13,19 +13,19 @@ public enum Error {
 	CORRUPTED_COUNTER			(10, "Corrupted COUNTER table"),
 	CANNOT_UPDATE_COUNTER		(11, "Unknown problem with the COUNTER table"),
 	INCOMPLETE_DOCUMENT			(12, "Some document parameter (template/title/author/body) has not been defined");
-	
+
 	private int errorCode;
 	private String message;
-	
+
 	Error(int code, String message) {
 		this.errorCode = code;
 		this.message = message;
 	}
-	
+
 	public int getErrorCode() {
 		return errorCode;
 	}
-	
+
 	public String getMessage() {
 		return "Error code " + errorCode + ": " + message;
 	}	
