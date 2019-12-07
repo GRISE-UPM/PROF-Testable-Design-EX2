@@ -25,6 +25,7 @@ public class SmokeTest {
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
+
 		assertEquals("Correcto: formato", "DOCUMENT ID: 4\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 	}
 	
@@ -79,6 +80,7 @@ public class SmokeTest {
 		documentIdProvider.getDocumentId();
 		documentIdProvider.getDocumentId();
 		documentIdProvider.getDocumentId();	//Se simula que a la quinta va a actualizar mal
+
 	}
 
 }
