@@ -50,14 +50,21 @@ public class DocumentIdProvider {
 		propertiesInFile = new Properties();
 		String path = devuelveEntorno(); 
 		InputStream inputFile = null;
-		ficheroProperties(inputFile,path);
+		
+		ficheroProperties(path,"config.properties");
+		
 		String url = propertiesInFile.getProperty("url");
 		String username = propertiesInFile.getProperty("username");
 		String password = propertiesInFile.getProperty("password");
-		cargarDriver();
+		
+		cargarDriver("com.mysql.jdbc.Driver");
+		
 		conexionBD(url,username,password);
+		
 		leerTablaCounters();
+		
 		conseguirLastID();
+		
 		checkearID(numberOfValues);
 	}
 	
@@ -65,10 +72,9 @@ public class DocumentIdProvider {
 		// If ENVIRON does not exist, null is returned
 			String path = devuelveEntorno(); 
 
-			InputStream inputFile = null;
 
 			// Load the property file
-			ficheroProperties(inputFile,path);
+			ficheroProperties(path,"config.properties");
 
 			
 
@@ -78,7 +84,7 @@ public class DocumentIdProvider {
 			String password = propertiesInFile.getProperty("password");
 
 			// Load DB driver
-			cargarDriver();
+			cargarDriver("com.mysql.jdbc.Driver");
 
 			// Create DB connection
 			conexionBD(url,username,password);
@@ -109,9 +115,10 @@ public class DocumentIdProvider {
 		return path;
 	}
 	
-	protected void ficheroProperties(InputStream inputFile, String path) throws NonRecoverableError {
+	protected void ficheroProperties(String path, String fichero) throws NonRecoverableError {
 		try {
-			inputFile = new FileInputStream(path + "config.properties");
+			InputStream inputFile = null;
+			inputFile = new FileInputStream(path + fichero);
 			propertiesInFile.load(inputFile);
 
 		} catch (FileNotFoundException e) {
@@ -127,10 +134,10 @@ public class DocumentIdProvider {
 		}
 	}
 	
-	protected void cargarDriver() throws NonRecoverableError {
+	protected void cargarDriver(String driver) throws NonRecoverableError {
 		try {
 
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(driver).newInstance();
 
 		} catch (InstantiationException e) {
 

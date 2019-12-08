@@ -5,6 +5,7 @@ import static es.upm.grise.profundizacion.HandleDocuments.Error.CANNOT_INSTANTIA
 import static es.upm.grise.profundizacion.HandleDocuments.Error.CANNOT_READ_FILE;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.CORRUPTED_COUNTER;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.NON_EXISTING_FILE;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +15,7 @@ import java.io.InputStream;
 public class DocumentIdProviderDouble extends DocumentIdProvider {
 
 	private static DocumentIdProviderDouble instance;
-	private int documentId=0;
+	private int documentId=1;
 	
 	public static DocumentIdProviderDouble getInstance() throws NonRecoverableError {
 		if (instance != null)
@@ -30,14 +31,19 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 	}
 	public DocumentIdProviderDouble() throws NonRecoverableError {
 		// TODO Auto-generated constructor stub
+	
 	}
 	
+	@Override
+	public int getDocumentId()  {
+		return documentId;
+	}
 
 	@Override
-	protected void cargarDriver() throws NonRecoverableError {
+	protected void cargarDriver(String driver) throws NonRecoverableError {
 		try {
 
-			Class.forName("Driver-Falso").newInstance();
+			Class.forName(driver).newInstance();
 
 		} catch (InstantiationException e) {
 
@@ -58,9 +64,10 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 	}
 	
 	@Override
-	protected void ficheroProperties(InputStream inputFile, String path) throws NonRecoverableError {
+	protected void ficheroProperties(String path, String fichero) throws NonRecoverableError {
 		try {
-			inputFile = new FileInputStream(path + "config.NoExisto");
+			InputStream inputFile = null;
+			inputFile = new FileInputStream(path + fichero);
 			propertiesInFile.load(inputFile);
 
 		} catch (FileNotFoundException e) {
@@ -86,8 +93,6 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 
 		}
 	}
-	
-
 	
 	
 

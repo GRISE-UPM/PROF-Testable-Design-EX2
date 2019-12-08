@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -13,7 +14,6 @@ import es.upm.grise.profundizacion.HandleDocuments.NonRecoverableError;
 import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
 
 public class SmokeTest {
-	
 	
 	
 	
@@ -39,9 +39,18 @@ public class SmokeTest {
 	 */
 	@Test
 	public void numeroCorrecto() throws NonRecoverableError, RecoverableError {
-		int resultado=284;
+		int resultado=340;
 		Document documento = new Document();
-		System.out.println(documento.getDocumentId());
+		//System.out.println(documento.getDocumentId());
+		assertEquals(resultado,documento.getDocumentId());
+
+	}
+	
+	//Este test es igual que el anterior pero sin requerir de la BD, por lo que es mas sencillo de realizar.
+	@Test
+	public void numeroCorrectoConDoble() throws NonRecoverableError{
+		int resultado=1;
+		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
 		assertEquals(resultado,documento.getDocumentId());
 
 	}
@@ -63,21 +72,29 @@ public class SmokeTest {
 	public void ficheroDeConfiguracionNoExiste() throws NonRecoverableError{
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
 		
-		InputStream file = null;
 		
-		documento.ficheroProperties(file, "PathFalso");
+		documento.ficheroProperties("PathFalso", "fichero.falso");
 	}
+	
+	@Test(expected = NonRecoverableError.class)
+	public void ficheroDeConfiguracionNoExiste2() throws NonRecoverableError{
+		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
+		
+		
+		documento.ficheroProperties("PathFalso", "config.properties");
+	}
+	
 	
 	@Test(expected = NonRecoverableError.class)
 	public void driverNoExiste() throws NonRecoverableError{
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
-		documento.cargarDriver();
+		documento.cargarDriver("DriverFalso");
 	}
 	
 	
 	@Test(expected = NonRecoverableError.class)
 	public void masDeUnaFilaEnLaTablaCounters() throws NonRecoverableError{
-		int valor=1;
+		int valor=5;
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
 		documento.checkearID(valor);
 	}
