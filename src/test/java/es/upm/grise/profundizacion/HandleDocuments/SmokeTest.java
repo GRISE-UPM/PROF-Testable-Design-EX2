@@ -39,7 +39,7 @@ public class SmokeTest {
 	 */
 	@Test
 	public void numeroCorrecto() throws NonRecoverableError, RecoverableError {
-		int resultado=280;
+		int resultado=284;
 		Document documento = new Document();
 		System.out.println(documento.getDocumentId());
 		assertEquals(resultado,documento.getDocumentId());
