@@ -5,16 +5,16 @@ import static es.upm.grise.profundizacion.HandleDocuments.Error.INCOMPLETE_DOCUM
 public class Document {
 
 	// Document ID
-	private int documentId;
+	protected int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	protected String template;
+	protected String author;
+	protected String title;
+	protected String body;
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		this.documentId = DocumentIdProviderDouble.getInstance().getDocumentId();
 	}
 
 	public void setTemplate(String template) {
@@ -33,7 +33,7 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	public int getDocumentId() {
 		return documentId;
 	}
 	
@@ -56,3 +56,4 @@ public class Document {
 	}
 
 }
+
