@@ -32,20 +32,20 @@ public class SmokeTest {
 	
 	
 	/*Este es el test mas molesto, puesto que se desea comprobar el correcto funcionamiento de los ID procedentes de la Base
-	  de datos, es necesario actualizar la variable "resultado" en cada ejecución del test (suman 4 al valor anterior).
+	  de datos, es necesario actualizar la variable "resultado" en cada ejecución del test (sumar 4 al valor anterior).
 	  Mi consejo:
 	  Realizar este test de manera local y desactivarlo (@Ignore) cuando se envie al Jenkins, ya que predecir el valor que
 	  debe tener la variable en el test de Jenkins puede ser complicado.
 	 */
 	@Test
 	public void numeroCorrecto() throws NonRecoverableError, RecoverableError {
-		int resultado=203;
+		int resultado=280;
 		Document documento = new Document();
-		int documentId=documento.getDocumentId();
-		System.out.println(documentId);
-		assertEquals(resultado,documentId);
+		System.out.println(documento.getDocumentId());
+		assertEquals(resultado,documento.getDocumentId());
 
 	}
+	
 	
 	
 	@Test
@@ -60,10 +60,9 @@ public class SmokeTest {
 	}
 	
 	@Test(expected = NonRecoverableError.class)
-	public void fichConiguracionNoExiste() throws NonRecoverableError{
+	public void ficheroDeConfiguracionNoExiste() throws NonRecoverableError{
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
 		
-		Properties propierties = new Properties();
 		InputStream file = null;
 		
 		documento.ficheroProperties(file, "PathFalso");
@@ -77,10 +76,10 @@ public class SmokeTest {
 	
 	
 	@Test(expected = NonRecoverableError.class)
-	public void masDeUnaFilaenLaTablaCounters() throws NonRecoverableError{
-		int numberOfValues=5;
+	public void masDeUnaFilaEnLaTablaCounters() throws NonRecoverableError{
+		int valor=1;
 		DocumentIdProviderDouble documento = new DocumentIdProviderDouble();
-		documento.checkearID(numberOfValues);
+		documento.checkearID(valor);
 	}
 	
 

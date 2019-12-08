@@ -3,6 +3,7 @@ package es.upm.grise.profundizacion.HandleDocuments;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.CANNOT_FIND_DRIVER;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.CANNOT_INSTANTIATE_DRIVER;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.CANNOT_READ_FILE;
+import static es.upm.grise.profundizacion.HandleDocuments.Error.CORRUPTED_COUNTER;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.NON_EXISTING_FILE;
 
 import java.io.FileInputStream;
@@ -13,7 +14,7 @@ import java.io.InputStream;
 public class DocumentIdProviderDouble extends DocumentIdProvider {
 
 	private static DocumentIdProviderDouble instance;
-	private int documentId;
+	private int documentId=0;
 	
 	public static DocumentIdProviderDouble getInstance() throws NonRecoverableError {
 		if (instance != null)
@@ -31,11 +32,7 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@Override
-	public int getDocumentId(){
-		return documentId++;
-	}
-	
+
 	@Override
 	protected void cargarDriver() throws NonRecoverableError {
 		try {
@@ -78,6 +75,19 @@ public class DocumentIdProviderDouble extends DocumentIdProvider {
 
 		}
 	}
+	
+	@Override
+	protected void checkearID(int valor) throws NonRecoverableError {
+		
+		if(valor != 1) {
+
+			System.out.println(CORRUPTED_COUNTER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+
 	
 	
 
