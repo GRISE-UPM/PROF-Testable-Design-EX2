@@ -23,3 +23,15 @@
 hs_err_pid*
 /bin/
 /target/
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
