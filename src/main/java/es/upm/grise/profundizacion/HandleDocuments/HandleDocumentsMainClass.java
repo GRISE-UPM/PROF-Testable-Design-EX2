@@ -12,7 +12,13 @@ public class HandleDocumentsMainClass {
 		String TITLE = args[3];
 		String AUTHOR = args[5];
 		String BODY = args[7];
-		
+		DocumentIdProvider documentID = null;
+		try {
+			documentID = new DocumentIdProvider();
+		} catch (NonRecoverableError e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			
 			Document document = new Document();
