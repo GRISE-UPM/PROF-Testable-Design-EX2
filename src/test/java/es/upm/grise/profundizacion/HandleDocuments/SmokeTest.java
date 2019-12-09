@@ -53,7 +53,7 @@ public class SmokeTest {
 	@Test
 	public void documentNumberCorrect() throws NonRecoverableError, RecoverableError {
 
-		int correct_id = 1;
+		int correct_id = 4;
  		Document prueba1 = new Document();
  		int document_id = prueba1.getDocumentId();
  		assertEquals( correct_id, document_id);

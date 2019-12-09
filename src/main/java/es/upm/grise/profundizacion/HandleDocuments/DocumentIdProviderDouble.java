@@ -91,8 +91,13 @@ public class DocumentIdProviderDouble extends DocumentIdProvider{
 	
 	@Override
 	public int getlastObjectId() throws NonRecoverableError{
-		
-		return 1;
+		boolean prueba = false;
+		if (prueba) {
+			return super.getlastObjectId();
+		}
+		else {
+			throw new NonRecoverableError();
+		}
 	}
 	
 	@Override
