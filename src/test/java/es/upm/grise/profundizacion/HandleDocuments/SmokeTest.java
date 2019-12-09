@@ -33,6 +33,7 @@ public class SmokeTest {
 		document.setBody(BODY);
 		
 		return document;
+
 	}
 	
 	@BeforeClass
