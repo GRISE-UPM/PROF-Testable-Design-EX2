@@ -57,6 +57,7 @@ public class DocumentIdProvider {
 
 		} catch (FileNotFoundException e) {
 
+
 			System.out.println(NON_EXISTING_FILE.getMessage());          	
 			throw new NonRecoverableError();
 
