@@ -1,6 +1,6 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
-public class HandleDocumentsMainClass {
+public class HandleDocumentsMainClass { 
 
 	public static void main(String[] args) {
 		
