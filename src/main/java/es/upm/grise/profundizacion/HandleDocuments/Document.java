@@ -4,6 +4,8 @@ import static es.upm.grise.profundizacion.HandleDocuments.Error.INCOMPLETE_DOCUM
 
 public class Document {
 
+	private TemplateFactory templateFactory;
+	
 	// Document ID
 	private int documentId;
 	
@@ -12,9 +14,13 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+	  
+	public Document(DocumentIdProvider documentIdProvider, TemplateFactory templateFactory) throws NonRecoverableError {
+		// NEW: insertar el singleton por constructor
+		this.documentId = documentIdProvider.getDocumentId();
+		// NEW: insertar templateFactory como instancia
+		this.templateFactory = templateFactory;
+		
 	}
 
 	public void setTemplate(String template) {
@@ -33,7 +39,8 @@ public class Document {
 		this.body = body;
 	}
 	
-	public Object getDocumentId() {
+	// NEW: de Object a Int (no tener que castear en el test)
+	public int getDocumentId() {
 		return documentId;
 	}
 	
@@ -50,7 +57,7 @@ public class Document {
 			
 		} else {
 
-			return String.format(TemplateFactory.getTemplate(template), documentId, title, author, body);
+			return String.format(templateFactory.getTemplate(template), documentId, title, author, body);
 			
 		}
 	}
