@@ -1,6 +1,6 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
-public class HandleDocuments {
+public class HandleDocumentsMainClass {
 
 	public static void main(String[] args) {
 		
@@ -8,10 +8,10 @@ public class HandleDocuments {
 		// You can assume in particular that parameters have been checked
 		
 		// The document elements
-		String TEMPLATE = args[0].toUpperCase();
-		String TITLE = args[1];
-		String AUTHOR = args[2];
-		String BODY = args[3];
+		String TEMPLATE = args[1].toUpperCase();
+		String TITLE = args[3];
+		String AUTHOR = args[5];
+		String BODY = args[7];
 		
 		try {
 			
@@ -20,10 +20,6 @@ public class HandleDocuments {
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
 			document.setBody(BODY);
-			System.out.println(TEMPLATE);
-			System.out.println(AUTHOR);
-			System.out.println(TITLE);
-			System.out.println(BODY);
 			System.out.println(document.getFormattedDocument());
 			
 			// What follows does not matter either ....
