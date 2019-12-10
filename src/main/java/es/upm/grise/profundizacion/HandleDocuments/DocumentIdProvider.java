@@ -30,12 +30,11 @@ public class DocumentIdProvider {
 
 	protected String driverDB = "com.mysql.jdbc.Driver";
 	
-	protected Statement statement = null;
-	protected ResultSet resultSet = null;
-	
 	protected Properties propertiesInFile = new Properties();
 	protected InputStream inputFile = null;
 	
+	protected Statement statement = null;
+	protected ResultSet resultSet = null;
 	
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null) 
