@@ -1,0 +1,15 @@
+
+xsquid:UselessImportCheck"TRemove this unnecessary import: same package classes are always implicitly imported.(Ô²ˆ
+xsquid:UselessImportCheck"TRemove this unnecessary import: same package classes are always implicitly imported.(Åœªğ
+usquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(íˆœ¿üÿÿÿÿ8º„Æë-
+Î%squid:RedundantThrowsDeclarationCheck'"•Remove the declaration of thrown exception 'es.upm.grise.profundizacion.HandleDocuments.RecoverableError', as it cannot be thrown from method's body.(£ÓìÅ8›ÌÆë-
+wsquid:UselessImportCheck	"TRemove this unnecessary import: same package classes are always implicitly imported.(²®Û
+¤squid:S1186B"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(°“‡ıüÿÿÿÿ8Ò×Çë-
+usquid:S00117+"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‘Ú¡¼ÿÿÿÿÿ8¨ÁˆÆë-
+Ÿsquid:S1186;"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Äîö8³¾ÖÇë-
+Ÿsquid:S1186H"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(»©Äô8ÓÙÇë-
+Ÿsquid:S11865"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¬±ª¸8Øø¦Çë-
+Ó%squid:RedundantThrowsDeclarationCheck"•Remove the declaration of thrown exception 'es.upm.grise.profundizacion.HandleDocuments.RecoverableError', as it cannot be thrown from method's body.(Û¡³»ÿÿÿÿÿ8àØ—Æë-
+Esquid:S1481*"'Remove this unused "d2" local variable.(¯òìà8œŒÆë-
+usquid:S00117,"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ò¯¹•úÿÿÿÿ8îÎŒÆë-
+wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(×Ñú‡şÿÿÿÿ

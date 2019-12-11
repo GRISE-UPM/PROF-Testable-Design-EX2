@@ -15,7 +15,7 @@ public class HandleDocumentsMainClass {
 		
 		try {
 			
-			Document document = new Document();
+			Document document = new Document( DocumentIdProvider.getInstance().getDocumentId() );
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);

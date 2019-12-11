@@ -17,38 +17,31 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	public static String ENVIRON = "APP_HOME";
+	private static String ENVIRON = "APP_HOME";
 
 	// ID for the newly created documents
-	public int documentId;
+	private int documentId;
 
 	// Connection to database (open during program execution)
-	Connection connection = null;
+	protected Connection connection = null;
 
 	// Variables for the consults and results to the DB
-	Statement statement = null;
-	ResultSet resultSet = null;
+	private Statement statement = null;
+	private ResultSet resultSet = null;
 
 	// Declare drive
-	public static String driver = "com.mysql.jdbc.Driver";
+	private static String driver = "com.mysql.jdbc.Driver";
 
 	// Singleton access
-	public static DocumentIdProvider instance;
+	private static DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
-		if (instance != null)
-
-			return instance;
-
-		else {
-
+	protected static DocumentIdProvider getInstance() throws NonRecoverableError {
+		if (instance == null) {
 			instance = new DocumentIdProvider();
-			return instance;
-
-		}	
+		}
+		return instance;
 	}
 
-	// Create the connection to the database
 	public DocumentIdProvider() throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
@@ -101,7 +94,7 @@ public class DocumentIdProvider {
 		closeAllDBConnections();
 	}
 
-	private void loadDBDriver() throws NonRecoverableError
+	void loadDBDriver() throws NonRecoverableError
 	{
 		try {
 
@@ -135,7 +128,7 @@ public class DocumentIdProvider {
 		}
 	}
 
-	private void loadThePropertyFile( String path, Properties propertiesInFile ) throws NonRecoverableError
+	void loadThePropertyFile( String path, Properties propertiesInFile ) throws NonRecoverableError
 	{
 		InputStream inputFile;
 		try {
@@ -174,7 +167,7 @@ public class DocumentIdProvider {
 		}
 	}
 
-	private int getLastObjectID() throws NonRecoverableError
+	protected int getLastObjectID() throws NonRecoverableError
 	{
 		int numberOfValues = 0;
 
