@@ -32,11 +32,6 @@ public class HandleDocumentsMainClass {
 			// Exit with error
 			System.exit(1);
 			
-		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-		
 		}
 		
 

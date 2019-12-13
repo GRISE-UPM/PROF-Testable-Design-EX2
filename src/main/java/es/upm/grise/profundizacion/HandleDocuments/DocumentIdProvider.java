@@ -28,6 +28,11 @@ public class DocumentIdProvider {
 	// Singleton access
 	private static DocumentIdProvider instance;
 
+	private Properties propertiesInFile = new Properties();
+	private String path = System.getenv(ENVIRON);
+	private Statement statement = null;
+	private ResultSet resultSet = null;
+
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
@@ -41,12 +46,15 @@ public class DocumentIdProvider {
 		}	
 	}
 
+	DocumentIdProvider() {
+
+	}
+
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public void createConnectionToDB() throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
-		
+
 		if (path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
@@ -54,99 +62,15 @@ public class DocumentIdProvider {
 
 		} else {
 
-			Properties propertiesInFile = new Properties();
-			InputStream inputFile = null;
+			loadPropertyFile(path + "config.properties");
 
-			// Load the property file
-			try {
-				inputFile = new FileInputStream(path + "config.properties");
-				propertiesInFile.load(inputFile);
+			loadDBDriver("com.mysql.jdbc.Driver");
 
-			} catch (FileNotFoundException e) {
+			createDBConnection(); // Acceso a DB
 
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
-				throw new NonRecoverableError();
+			readCountersTable(); // Acceso a DB
 
-			} catch (IOException e) {
-
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Get the DB username and password
-			String url = propertiesInFile.getProperty("url");
-			String username = propertiesInFile.getProperty("username");
-			String password = propertiesInFile.getProperty("password");
-
-			// Load DB driver
-			try {
-
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-			} catch (InstantiationException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IllegalAccessException e) {
-
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (ClassNotFoundException e) {
-
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Create DB connection
-			try {
-
-				connection = DriverManager.getConnection(url, username, password);
-
-			} catch (SQLException e) {
-
-				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Read from the COUNTERS table
-			String query = "SELECT documentId FROM Counters";
-			Statement statement = null;
-			ResultSet resultSet = null;
-
-			try {
-
-				statement = connection.createStatement();
-				resultSet = statement.executeQuery(query);
-
-			} catch (SQLException e) {
-
-				System.out.println(CANNOT_RUN_QUERY.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Get the last objectID
-			int numberOfValues = 0;
-			try {
-
-				while (resultSet.next()) {
-
-					documentId = resultSet.getInt("documentId");
-					numberOfValues++;
-
-				}
-
-			} catch (SQLException e) {
-
-				System.out.println(INCORRECT_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			int numberOfValues = getLastObjectID(); // Acceso a DB
 
 			// Only one objectID can be retrieved
 			if(numberOfValues != 1) {
@@ -156,18 +80,121 @@ public class DocumentIdProvider {
 
 			}
 
-			// Close all DB connections
-			try {
+			closeDBConnection(); // Acceso a DB
+		}
+	}
 
-				resultSet.close();
-				statement.close();
+	void loadPropertyFile(String path) throws NonRecoverableError {
+		// Load the property file
+		InputStream inputFile = null;
+		try {
+			inputFile = new FileInputStream(path);
+			propertiesInFile.load(inputFile);
 
-			} catch (SQLException e) {
+		} catch (FileNotFoundException e) {
 
-				System.out.println(CONNECTION_LOST.getMessage());          	
-				throw new NonRecoverableError();
+			System.out.println(NON_EXISTING_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IOException e) {
+
+			System.out.println(CANNOT_READ_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+
+	void loadDBDriver(String driver) throws NonRecoverableError {
+		// Load DB driver
+		try {
+
+			Class.forName(driver).newInstance();
+
+		} catch (InstantiationException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IllegalAccessException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (ClassNotFoundException e) {
+
+			System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
+			throw new NonRecoverableError();
+		}
+	}
+
+	void createDBConnection() throws NonRecoverableError {
+		// Get the DB username and password
+		String url = propertiesInFile.getProperty("url");
+		String username = propertiesInFile.getProperty("username");
+		String password = propertiesInFile.getProperty("password");
+		// Create DB connection
+		try {
+
+			connection = DriverManager.getConnection(url, username, password);
+
+		} catch (SQLException e) {
+
+			System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+
+	void readCountersTable() throws NonRecoverableError {
+		// Read from the COUNTERS table
+		String query = "SELECT documentId FROM Counters";
+
+		try {
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+
+		} catch (SQLException e) {
+
+			System.out.println(CANNOT_RUN_QUERY.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+
+	int getLastObjectID() throws NonRecoverableError {
+		// Get the last objectID
+		int numberOfValues = 0;
+		try {
+
+			while (resultSet.next()) {
+
+				documentId = resultSet.getInt("documentId");
+				numberOfValues++;
 
 			}
+
+		} catch (SQLException e) {
+
+			System.out.println(INCORRECT_COUNTER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+		return numberOfValues;
+	}
+
+	void closeDBConnection() throws NonRecoverableError {
+		// Close all DB connections
+		try {
+
+			resultSet.close();
+			statement.close();
+
+		} catch (SQLException e) {
+
+			System.out.println(CONNECTION_LOST.getMessage());          	
+			throw new NonRecoverableError();
+
 		}
 	}
 
@@ -177,23 +204,7 @@ public class DocumentIdProvider {
 		documentId++;
 
 		// Access the COUNTERS table
-		String query = "UPDATE Counters SET documentId = ?";
-		int numUpdatedRows;
-
-		// Update the documentID counter
-		try {
-
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, documentId);
-			numUpdatedRows = preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-
-			System.out.println(e.toString());
-			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());          	
-			throw new NonRecoverableError();
-
-		}
+		int numUpdatedRows = updateDocumentIDCounter();
 
 		// Check that the update has been effectively completed
 		if (numUpdatedRows != 1) {
@@ -205,5 +216,25 @@ public class DocumentIdProvider {
 
 		return documentId;
 
+	}
+
+	int updateDocumentIDCounter() throws NonRecoverableError {
+
+		// Update the documentID counter
+		int numUpdatedRows = 0;
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Counters SET documentId = ?");
+			preparedStatement.setInt(1, documentId);
+			numUpdatedRows = preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+
+			System.out.println(e.toString());
+			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+		return numUpdatedRows;
 	}
 }
