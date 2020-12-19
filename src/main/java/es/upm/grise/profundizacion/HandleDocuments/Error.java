@@ -14,8 +14,8 @@ public enum Error {
 	CANNOT_UPDATE_COUNTER		(11, "Unknown problem with the COUNTER table"),
 	INCOMPLETE_DOCUMENT			(12, "Some document parameter (template/title/author/body) has not been defined");
 	
-	private int errorCode;
-	private String message;
+	protected int errorCode;
+	protected String message;
 	
 	Error(int code, String message) {
 		this.errorCode = code;

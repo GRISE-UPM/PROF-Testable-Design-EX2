@@ -1,20 +1,28 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
-import static es.upm.grise.profundizacion.HandleDocuments.Error.INCOMPLETE_DOCUMENT;
-
 public class Document {
 
 	// Document ID
-	private int documentId;
+	protected int documentId;
 	
 	// Document attributes
-	private String template;
-	private String author;
-	private String title;
-	private String body;
+	protected String template;
+	protected String author;
+	protected String title;
+	protected String body;
+	protected TemplateFactory tf;
 	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+	public Document() {
+		
+	}
+	
+	public Document(String template, String author, String title, String body,  TemplateFactory templateFactory, DocumentIdProvider id) throws NonRecoverableError {
+		this.template=template;
+		this.author = author;
+		this.title = title;
+		this.body = body;
+		this.documentId = id.getDocumentId();
+		this.tf = templateFactory;
 	}
 
 	public void setTemplate(String template) {
@@ -45,12 +53,12 @@ public class Document {
 			author == null ||
 			body == null) {
 			
-			System.out.println(INCOMPLETE_DOCUMENT.getMessage());          	
+			System.out.println(Error.INCOMPLETE_DOCUMENT.getMessage());          	
 			throw new RecoverableError();
 			
 		} else {
 
-			return String.format(TemplateFactory.getTemplate(template), documentId, title, author, body);
+			return String.format(tf.getTemplate(template), documentId, title, author, body);
 			
 		}
 	}
