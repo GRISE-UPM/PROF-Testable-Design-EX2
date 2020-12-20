@@ -17,17 +17,18 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
+	protected String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	protected int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	//protected DocumentIdProvider instance;
 
+	/*
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
@@ -40,10 +41,28 @@ public class DocumentIdProvider {
 
 		}	
 	}
+	*/
 
-	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	protected void checkConfigFile(InputStream inputFile, String path, Properties propertiesInFile) throws NonRecoverableError {
+		// Load the property file
+		try {
+			inputFile = new FileInputStream(path + "config.properties");
+			propertiesInFile.load(inputFile);
 
+		} catch (FileNotFoundException e) {
+
+			System.out.println(NON_EXISTING_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		} catch (IOException e) {
+
+			System.out.println(CANNOT_READ_FILE.getMessage());          	
+			throw new NonRecoverableError();
+
+		}
+	}
+	
+	protected void connectToDatabase() throws NonRecoverableError {
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
 		
@@ -56,23 +75,8 @@ public class DocumentIdProvider {
 
 			Properties propertiesInFile = new Properties();
 			InputStream inputFile = null;
-
-			// Load the property file
-			try {
-				inputFile = new FileInputStream(path + "config.properties");
-				propertiesInFile.load(inputFile);
-
-			} catch (FileNotFoundException e) {
-
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
-				throw new NonRecoverableError();
-
-			} catch (IOException e) {
-
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
+			
+			checkConfigFile(inputFile, path, propertiesInFile);
 
 			// Get the DB username and password
 			String url = propertiesInFile.getProperty("url");
@@ -169,6 +173,10 @@ public class DocumentIdProvider {
 
 			}
 		}
+	}
+	// Create the connection to the database
+	protected DocumentIdProvider() {
+		//connectToDatabase();
 	}
 
 	// Return the next valid objectID

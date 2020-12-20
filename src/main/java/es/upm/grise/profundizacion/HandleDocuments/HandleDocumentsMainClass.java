@@ -2,7 +2,7 @@ package es.upm.grise.profundizacion.HandleDocuments;
 
 public class HandleDocumentsMainClass {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NonRecoverableError {
 		
 		// Previous code does not matter .... 
 		// You can assume in particular that parameters have been checked
@@ -20,6 +20,7 @@ public class HandleDocumentsMainClass {
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
 			document.setBody(BODY);
+			document.setTf( new TemplateFactory());
 			System.out.println(document.getFormattedDocument());
 			
 			// What follows does not matter either ....
@@ -32,11 +33,6 @@ public class HandleDocumentsMainClass {
 			// Exit with error
 			System.exit(1);
 			
-		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-		
 		}
 		
 

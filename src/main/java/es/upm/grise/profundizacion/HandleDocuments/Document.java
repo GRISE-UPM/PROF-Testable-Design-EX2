@@ -63,4 +63,8 @@ public class Document {
 		}
 	}
 
+	public void setTf(TemplateFactory tf) {
+		this.tf = tf;
+	}
+
 }
