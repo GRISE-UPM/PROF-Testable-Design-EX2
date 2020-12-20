@@ -1,23 +1,11 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
-import static es.upm.grise.profundizacion.HandleDocuments.Error.*;
+import java.sql.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
+import static es.upm.grise.profundizacion.HandleDocuments.Error.*;
 
 public class DocumentIdProvider {
 
-	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
 	private int documentId;
@@ -35,139 +23,107 @@ public class DocumentIdProvider {
 
 		else {
 
-			instance = new DocumentIdProvider();
+			instance = new DocumentIdProvider(new ConfigProvider());
 			return instance;
 
 		}	
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	private DocumentIdProvider(ConfigProvider configProvider) throws NonRecoverableError {
+		// Get the DB username and password
+		String url = configProvider.getConfigValue("url");
+		String username = configProvider.getConfigValue("username");
+		String password = configProvider.getConfigValue("password");
 
-		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
-		
-		if (path == null) {
+		// Load DB driver
+		try {
 
-			System.out.println(UNDEFINED_ENVIRON.getMessage());
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+
+		} catch (InstantiationException e) {
+
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
 			throw new NonRecoverableError();
 
-		} else {
+		} catch (IllegalAccessException e) {
 
-			Properties propertiesInFile = new Properties();
-			InputStream inputFile = null;
+			System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
+			throw new NonRecoverableError();
 
-			// Load the property file
-			try {
-				inputFile = new FileInputStream(path + "config.properties");
-				propertiesInFile.load(inputFile);
+		} catch (ClassNotFoundException e) {
 
-			} catch (FileNotFoundException e) {
+			System.out.println(CANNOT_FIND_DRIVER.getMessage());
+			throw new NonRecoverableError();
 
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
-				throw new NonRecoverableError();
+		}
 
-			} catch (IOException e) {
+		// Create DB connection
+		try {
 
-				System.out.println(CANNOT_READ_FILE.getMessage());          	
-				throw new NonRecoverableError();
+			connection = DriverManager.getConnection(url, username, password);
 
-			}
+		} catch (SQLException e) {
 
-			// Get the DB username and password
-			String url = propertiesInFile.getProperty("url");
-			String username = propertiesInFile.getProperty("username");
-			String password = propertiesInFile.getProperty("password");
+			System.out.println(CANNOT_CONNECT_DATABASE.getMessage());
+			throw new NonRecoverableError();
 
-			// Load DB driver
-			try {
+		}
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+		// Read from the COUNTERS table
+		String query = "SELECT documentId FROM Counters";
+		Statement statement = null;
+		ResultSet resultSet = null;
 
-			} catch (InstantiationException e) {
+		try {
 
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
 
-			} catch (IllegalAccessException e) {
+		} catch (SQLException e) {
 
-				System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
+			System.out.println(CANNOT_RUN_QUERY.getMessage());
+			throw new NonRecoverableError();
 
-			} catch (ClassNotFoundException e) {
+		}
 
-				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
+		// Get the last objectID
+		int numberOfValues = 0;
+		try {
 
-			}
+			while (resultSet.next()) {
 
-			// Create DB connection
-			try {
-
-				connection = DriverManager.getConnection(url, username, password);
-
-			} catch (SQLException e) {
-
-				System.out.println(CANNOT_CONNECT_DATABASE.getMessage());          	
-				throw new NonRecoverableError();
+				documentId = resultSet.getInt("documentId");
+				numberOfValues++;
 
 			}
 
-			// Read from the COUNTERS table
-			String query = "SELECT documentId FROM Counters";
-			Statement statement = null;
-			ResultSet resultSet = null;
+		} catch (SQLException e) {
 
-			try {
+			System.out.println(INCORRECT_COUNTER.getMessage());
+			throw new NonRecoverableError();
 
-				statement = connection.createStatement();
-				resultSet = statement.executeQuery(query);
+		}
 
-			} catch (SQLException e) {
+		// Only one objectID can be retrieved
+		if (numberOfValues != 1) {
 
-				System.out.println(CANNOT_RUN_QUERY.getMessage());          	
-				throw new NonRecoverableError();
+			System.out.println(CORRUPTED_COUNTER.getMessage());
+			throw new NonRecoverableError();
 
-			}
+		}
 
-			// Get the last objectID
-			int numberOfValues = 0;
-			try {
+		// Close all DB connections
+		try {
 
-				while (resultSet.next()) {
+			resultSet.close();
+			statement.close();
 
-					documentId = resultSet.getInt("documentId");
-					numberOfValues++;
+		} catch (SQLException e) {
 
-				}
+			System.out.println(CONNECTION_LOST.getMessage());
+			throw new NonRecoverableError();
 
-			} catch (SQLException e) {
-
-				System.out.println(INCORRECT_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Only one objectID can be retrieved
-			if(numberOfValues != 1) {
-
-				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
-
-			// Close all DB connections
-			try {
-
-				resultSet.close();
-				statement.close();
-
-			} catch (SQLException e) {
-
-				System.out.println(CONNECTION_LOST.getMessage());          	
-				throw new NonRecoverableError();
-
-			}
 		}
 	}
 
