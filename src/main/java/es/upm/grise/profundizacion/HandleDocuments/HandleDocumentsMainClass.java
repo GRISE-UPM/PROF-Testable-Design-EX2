@@ -14,8 +14,8 @@ public class HandleDocumentsMainClass {
 		String BODY = args[7];
 		
 		try {
-			
-			Document document = new Document();
+			DocumentIdProvider idProvider = DocumentIdProvider.getInstance();
+			Document document = new Document(idProvider);
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
@@ -27,17 +27,12 @@ public class HandleDocumentsMainClass {
 			// Exit without error
 			System.exit(0);
 			
-		} catch (RecoverableError e) {
+		} catch (Exception e) {
 			
 			// Exit with error
 			System.exit(1);
 			
-		} catch (NonRecoverableError e) {
-			
-			// Exit with error
-			System.exit(1);
-		
-		}
+		} 
 		
 
 	}
