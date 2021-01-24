@@ -16,3 +16,5 @@
     * wrap reflection API with ReflectionWrapper.java
     * refactor MySQLHelper#getConnection non-static and protected
     * extract protected MySQLHelper#loadDriver
+* 5.c La aplicación detecta correctamente que hay más de una fila en la tabla Counters.
+    * Extract MySQLHelper complex constructor logic into MySQLHelperFactory

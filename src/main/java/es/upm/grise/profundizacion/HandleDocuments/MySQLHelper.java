@@ -8,9 +8,8 @@ public class MySQLHelper {
     // Connection to database (open during program execution)
     private final Connection connection;
 
-    public MySQLHelper(ConfigProvider configProvider, ReflectionWrapper reflectionWrapper) throws NonRecoverableError {
-        loadMySQLDriver(reflectionWrapper);
-        this.connection = getConnection(configProvider);
+    public MySQLHelper(Connection connection) {
+        this.connection = connection;
     }
 
     public int getLastDocumentId() throws NonRecoverableError {
@@ -78,35 +77,6 @@ public class MySQLHelper {
         if (numUpdatedRows != 1) {
             System.out.println(CORRUPTED_COUNTER.getMessage());
             throw new NonRecoverableError();
-        }
-    }
-
-    protected void loadMySQLDriver(ReflectionWrapper reflectionWrapper) throws NonRecoverableError {
-        try {
-            reflectionWrapper.findClass("com.mysql.jdbc.Driver").newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
-            throw new NonRecoverableError();
-        } catch (ClassNotFoundException e) {
-            System.out.println(CANNOT_FIND_DRIVER.getMessage());
-            throw new NonRecoverableError();
-        }
-    }
-
-    // Create the connection to the database
-    protected Connection getConnection(ConfigProvider configProvider) throws NonRecoverableError {
-        // Get the DB username and password
-        String url = configProvider.getConfigValue("url");
-        String username = configProvider.getConfigValue("username");
-        String password = configProvider.getConfigValue("password");
-
-        // Create DB connection
-        try {
-            return DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            System.out.println(CANNOT_CONNECT_DATABASE.getMessage());
-            throw new NonRecoverableError();
-
         }
     }
 }
