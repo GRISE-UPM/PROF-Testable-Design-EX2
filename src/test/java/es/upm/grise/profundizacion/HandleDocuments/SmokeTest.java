@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class SmokeTest {
     private static final int DOCUMENT_ID = 1623;
 
+    // 3.a La aplicación genera las plantillas correctamente
     @Test
     public void formatTemplateCorrectly() throws Exception {
         Document d = new Document(DOCUMENT_ID);

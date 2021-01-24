@@ -22,6 +22,7 @@ public class DocumentIdProviderTest extends TestCase {
         documentIdProvider = new DocumentIdProvider(mySQLHelper);
     }
 
+    // 3.b La aplicación asigna el número de documento correcto
     @Test
     public void testGetDocumentId() throws Exception {
         when(mySQLHelper.getLastDocumentId()).thenReturn(0);

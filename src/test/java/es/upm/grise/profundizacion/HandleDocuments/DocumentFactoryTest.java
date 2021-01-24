@@ -21,7 +21,7 @@ public class DocumentFactoryTest {
         documentFactory = new DocumentFactory(documentIdProvider);
     }
 
-    // c. Los números de documento asignados a documentos consecutivos son también números consecutivos.
+    // 3.c Los números de documento asignados a documentos consecutivos son también números consecutivos
     @Test
     public void testCreateDocument() throws Exception {
         when(documentIdProvider.getDocumentId()).thenReturn(0).thenReturn(1);

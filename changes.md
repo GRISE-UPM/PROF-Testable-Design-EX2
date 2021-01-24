@@ -1,14 +1,14 @@
 # Changes made to the code
 
-* La aplicación genera las plantillas correctamente
+* 3.a La aplicación genera las plantillas correctamente
     * apply dependency inversion on Document to receive documentId as arguments.
-* La aplicación asigna el número de documento correcto
+* 3.b La aplicación asigna el número de documento correcto
     * extract config related logics to ConfigProvider 
     * apply dependency inversion on DocumentIdProvider to receive ConfigProvider as arguments
     * add mockito dependency
     * extract MySQL related logics into MySQLHelper.java
     * remove DocumentIdProvider Singleton access
-* Los números de documento asignados a documentos consecutivos son también números consecutivos
+* 3.c Los números de documento asignados a documentos consecutivos son también números consecutivos
     * extract document creation process into DocumentFactory.java
 * 5.a La aplicación detecta correctamente que el fichero de configuración no existe.
     * refactor ConfigProvider to receive path as argument
