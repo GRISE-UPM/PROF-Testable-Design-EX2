@@ -17,7 +17,8 @@ public class HandleDocumentsMainClass {
 
 			final MySQLHelper mySQLHelper = new MySQLHelper(new ConfigProvider());
 			final DocumentIdProvider documentIdProvider = new DocumentIdProvider(mySQLHelper);
-			Document document = new Document(documentIdProvider.getDocumentId());
+			final DocumentFactory documentFactory = new DocumentFactory(documentIdProvider);
+			Document document = documentFactory.createDocument();
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);

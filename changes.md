@@ -8,3 +8,5 @@
     * add mockito dependency
     * extract MySQL related logics into MySQLHelper.java
     * remove DocumentIdProvider Singleton access
+* Los números de documento asignados a documentos consecutivos son también números consecutivos
+    * extract document creation process into DocumentFactory.java
