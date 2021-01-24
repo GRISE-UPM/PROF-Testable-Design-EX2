@@ -18,3 +18,4 @@
     * extract protected MySQLHelper#loadDriver
 * 5.c La aplicación detecta correctamente que hay más de una fila en la tabla Counters.
     * Extract MySQLHelper complex constructor logic into MySQLHelperFactory
+* 5.d La aplicación detecta correctamente que la actualización del documentID en la tabla Counters ha sido incorrectamente realizado.

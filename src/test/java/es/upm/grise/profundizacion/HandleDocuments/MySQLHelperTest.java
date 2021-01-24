@@ -6,12 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MySQLHelperTest {
@@ -36,5 +34,53 @@ public class MySQLHelperTest {
         when(resultSet.getInt("documentId")).thenReturn(0).thenReturn(1);
 
         mySQLHelper.getLastDocumentId();
+    }
+
+    // 5.d La aplicación detecta correctamente que la actualización del documentID en la tabla Counters ha sido incorrectamente realizado.
+    @Test(expected = NonRecoverableError.class)
+    public void testUpdateLastDocumentIdWhenPrepareStatementThrowsException() throws Exception {
+        when(connection.prepareStatement("UPDATE Counters SET documentId = ?"))
+                .thenThrow(new SQLException());
+
+        mySQLHelper.updateLastDocumentId(1);
+    }
+
+    @Test(expected = NonRecoverableError.class)
+    public void testUpdateLastDocumentIdWhenSetIntThrowsException() throws Exception {
+        final PreparedStatement preparedStatement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("UPDATE Counters SET documentId = ?"))
+                .thenReturn(preparedStatement);
+        doThrow(new SQLException()).when(preparedStatement).setInt(1, 1);
+
+        mySQLHelper.updateLastDocumentId(1);
+    }
+
+    @Test
+    public void testUpdateLastDocumentIdWhenExecuteUpdateThrowsSQLException() throws Exception {
+        final PreparedStatement preparedStatement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("UPDATE Counters SET documentId = ?"))
+                .thenReturn(preparedStatement);
+        when(preparedStatement.executeUpdate()).thenThrow(new SQLException());
+
+        NonRecoverableError exception = null;
+
+        try {
+            mySQLHelper.updateLastDocumentId(1);
+        } catch (NonRecoverableError e) {
+            exception = e;
+        }
+
+        assertNotNull(exception);
+        verify(preparedStatement).setInt(1, 1);
+    }
+
+    @Test(expected = NonRecoverableError.class)
+    public void testUpdateLastDocumentIdWhenAffectedRowIsNotOne() throws Exception {
+        final PreparedStatement preparedStatement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("UPDATE Counters SET documentId = ?"))
+                .thenReturn(preparedStatement);
+        when(preparedStatement.executeUpdate()).thenReturn(0);
+
+        mySQLHelper.updateLastDocumentId(1);
     }
 }
