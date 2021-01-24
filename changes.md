@@ -5,3 +5,6 @@
 * La aplicación asigna el número de documento correcto
     * extract config related logics to ConfigProvider 
     * apply dependency inversion on DocumentIdProvider to receive ConfigProvider as arguments
+    * add mockito dependency
+    * extract MySQL related logics into MySQLHelper.java
+    * remove DocumentIdProvider Singleton access
