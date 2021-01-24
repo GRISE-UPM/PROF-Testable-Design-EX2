@@ -9,13 +9,9 @@ import java.util.Properties;
 import static es.upm.grise.profundizacion.HandleDocuments.Error.*;
 
 public class ConfigProvider {
-    private static final String ENVIRON = "APP_HOME";
     private final Properties propertiesInFile = new Properties();
 
-    public ConfigProvider() throws NonRecoverableError {
-        // If ENVIRON does not exist, null is returned
-        String path = System.getenv(ENVIRON);
-
+    public ConfigProvider(final String path) throws NonRecoverableError {
         if (path == null) {
 
             System.out.println(UNDEFINED_ENVIRON.getMessage());

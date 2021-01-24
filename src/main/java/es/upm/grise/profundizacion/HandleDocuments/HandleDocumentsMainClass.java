@@ -1,6 +1,7 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
 public class HandleDocumentsMainClass {
+	private static final String ENVIRON = "APP_HOME";
 
 	public static void main(String[] args) {
 
@@ -14,8 +15,9 @@ public class HandleDocumentsMainClass {
 		String BODY = args[7];
 
 		try {
-
-			final MySQLHelper mySQLHelper = new MySQLHelper(new ConfigProvider());
+			// If ENVIRON does not exist, null is returned
+			final String path = System.getenv(ENVIRON);
+			final MySQLHelper mySQLHelper = new MySQLHelper(new ConfigProvider(path));
 			final DocumentIdProvider documentIdProvider = new DocumentIdProvider(mySQLHelper);
 			final DocumentFactory documentFactory = new DocumentFactory(documentIdProvider);
 			Document document = documentFactory.createDocument();

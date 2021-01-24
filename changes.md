@@ -10,3 +10,5 @@
     * remove DocumentIdProvider Singleton access
 * Los números de documento asignados a documentos consecutivos son también números consecutivos
     * extract document creation process into DocumentFactory.java
+* 5.a La aplicación detecta correctamente que el fichero de configuración no existe.
+    * refactor ConfigProvider to receive path as argument
