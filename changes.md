@@ -12,3 +12,7 @@
     * extract document creation process into DocumentFactory.java
 * 5.a La aplicación detecta correctamente que el fichero de configuración no existe.
     * refactor ConfigProvider to receive path as argument
+* 5.b La aplicación detecta correctamente que el driver MySQL no existe.
+    * wrap reflection API with ReflectionWrapper.java
+    * refactor MySQLHelper#getConnection non-static and protected
+    * extract protected MySQLHelper#loadDriver

@@ -17,7 +17,7 @@ public class HandleDocumentsMainClass {
 		try {
 			// If ENVIRON does not exist, null is returned
 			final String path = System.getenv(ENVIRON);
-			final MySQLHelper mySQLHelper = new MySQLHelper(new ConfigProvider(path));
+			final MySQLHelper mySQLHelper = new MySQLHelper(new ConfigProvider(path), new ReflectionWrapper());
 			final DocumentIdProvider documentIdProvider = new DocumentIdProvider(mySQLHelper);
 			final DocumentFactory documentFactory = new DocumentFactory(documentIdProvider);
 			Document document = documentFactory.createDocument();

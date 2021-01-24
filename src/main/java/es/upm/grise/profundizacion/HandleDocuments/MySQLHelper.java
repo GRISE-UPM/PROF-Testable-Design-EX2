@@ -8,7 +8,8 @@ public class MySQLHelper {
     // Connection to database (open during program execution)
     private final Connection connection;
 
-    public MySQLHelper(ConfigProvider configProvider) throws NonRecoverableError {
+    public MySQLHelper(ConfigProvider configProvider, ReflectionWrapper reflectionWrapper) throws NonRecoverableError {
+        loadMySQLDriver(reflectionWrapper);
         this.connection = getConnection(configProvider);
     }
 
@@ -80,16 +81,9 @@ public class MySQLHelper {
         }
     }
 
-    // Create the connection to the database
-    private static Connection getConnection(ConfigProvider configProvider) throws NonRecoverableError {
-        // Get the DB username and password
-        String url = configProvider.getConfigValue("url");
-        String username = configProvider.getConfigValue("username");
-        String password = configProvider.getConfigValue("password");
-
-        // Load DB driver
+    protected void loadMySQLDriver(ReflectionWrapper reflectionWrapper) throws NonRecoverableError {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            reflectionWrapper.findClass("com.mysql.jdbc.Driver").newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             System.out.println(CANNOT_INSTANTIATE_DRIVER.getMessage());
             throw new NonRecoverableError();
@@ -97,6 +91,14 @@ public class MySQLHelper {
             System.out.println(CANNOT_FIND_DRIVER.getMessage());
             throw new NonRecoverableError();
         }
+    }
+
+    // Create the connection to the database
+    protected Connection getConnection(ConfigProvider configProvider) throws NonRecoverableError {
+        // Get the DB username and password
+        String url = configProvider.getConfigValue("url");
+        String username = configProvider.getConfigValue("username");
+        String password = configProvider.getConfigValue("password");
 
         // Create DB connection
         try {
