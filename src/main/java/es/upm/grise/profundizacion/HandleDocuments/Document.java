@@ -48,11 +48,10 @@ public class Document {
 			System.out.println(INCOMPLETE_DOCUMENT.getMessage());          	
 			throw new RecoverableError();
 			
-		} else {
-
-			return String.format(TemplateFactory.getTemplate(template), documentId, title, author, body);
-			
 		}
+
+		return String.format(TemplateFactory.getTemplate(template), documentId, title, author, body);
+
 	}
 
 }
