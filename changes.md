@@ -2,8 +2,6 @@
 
 ENVIRON protected (no se si es necesario)
 
-DocumentIDProvider no privada
-
 Simplificar el constructor para poder doblar
 
 DocumentId en document a protected
