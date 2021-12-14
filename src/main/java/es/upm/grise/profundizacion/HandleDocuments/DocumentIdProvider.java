@@ -26,7 +26,7 @@ public class DocumentIdProvider {
 	Connection connection = null;
 
 	// Singleton access
-	 static DocumentIdProvider instance;
+	 private static DocumentIdProvider instance;
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
