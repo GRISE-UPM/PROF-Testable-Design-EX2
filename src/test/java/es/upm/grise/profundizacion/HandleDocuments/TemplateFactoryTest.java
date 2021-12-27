@@ -8,12 +8,12 @@ import es.upm.grise.profundizacion.HandleDocuments.Document;
 import es.upm.grise.profundizacion.HandleDocuments.NonRecoverableError;
 import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
 
-public class SmokeTest {
+public class TemplateFactoryTest {
 	
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
-		Document d = new Document();
+		Document d = new Document(1623);
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");

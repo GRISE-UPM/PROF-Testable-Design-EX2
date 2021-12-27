@@ -34,18 +34,18 @@ public class DocumentIdProvider {
 			return instance;
 
 		else {
-
-			instance = new DocumentIdProvider();
+			String path = System.getenv(ENVIRON);
+			instance = new DocumentIdProvider(path, "com.mysql.cj.jdbc.Driver", "url", "user", "password");
 			return instance;
 
 		}	
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public DocumentIdProvider(String path, String DBDriver, String DBURL, String DBUSER, String DBPASS) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+		//String path = System.getenv(ENVIRON);
 		
 		if (path == null) {
 
@@ -64,8 +64,8 @@ public class DocumentIdProvider {
 
 			} catch (FileNotFoundException e) {
 
-				System.out.println(NON_EXISTING_FILE.getMessage());          	
-				throw new NonRecoverableError();
+				System.out.println(NON_EXISTING_FILE.getMessage());
+				throw new NonRecoverableError("FileNotFoundException");
 
 			} catch (IOException e) {
 
@@ -75,14 +75,15 @@ public class DocumentIdProvider {
 			}
 
 			// Get the DB username and password
-			String url = propertiesInFile.getProperty("url");
-			String username = propertiesInFile.getProperty("username");
-			String password = propertiesInFile.getProperty("password");
+			String url = propertiesInFile.getProperty(DBURL);
+			String username = propertiesInFile.getProperty(DBUSER);
+			String password = propertiesInFile.getProperty(DBPASS);
 
 			// Load DB driver
 			try {
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				//Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Class.forName(DBDriver).newInstance();
 
 			} catch (InstantiationException e) {
 
@@ -97,7 +98,7 @@ public class DocumentIdProvider {
 			} catch (ClassNotFoundException e) {
 
 				System.out.println(CANNOT_FIND_DRIVER.getMessage());          	
-				throw new NonRecoverableError();
+				throw new NonRecoverableError("ClassNotFoundException");
 
 			}
 
@@ -152,7 +153,7 @@ public class DocumentIdProvider {
 			if(numberOfValues != 1) {
 
 				System.out.println(CORRUPTED_COUNTER.getMessage());          	
-				throw new NonRecoverableError();
+				throw new NonRecoverableError("CORRUPTED_COUNTER");
 
 			}
 
@@ -172,9 +173,8 @@ public class DocumentIdProvider {
 	}
 
 	// Return the next valid objectID
-	public int getDocumentId() throws NonRecoverableError {
+	public int getDocumentId(int lastId) throws NonRecoverableError {
 
-		documentId++;
 
 		// Access the COUNTERS table
 		String query = "UPDATE Counters SET documentId = ?";
@@ -184,7 +184,7 @@ public class DocumentIdProvider {
 		try {
 
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, documentId);
+			preparedStatement.setInt(1, lastId++);
 			numUpdatedRows = preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
@@ -203,7 +203,14 @@ public class DocumentIdProvider {
 
 		}
 
-		return documentId;
 
+		documentId = lastId++;
+
+		return lastId++;
+
+	}
+
+	public int getActualDocumentId(){
+		return this.documentId;
 	}
 }
