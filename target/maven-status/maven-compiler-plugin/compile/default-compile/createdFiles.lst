@@ -1,0 +1,8 @@
+es\upm\grise\profundizacion\HandleDocuments\Document.class
+es\upm\grise\profundizacion\HandleDocuments\RecoverableError.class
+es\upm\grise\profundizacion\HandleDocuments\Error.class
+es\upm\grise\profundizacion\HandleDocuments\TemplateFactory.class
+es\upm\grise\profundizacion\HandleDocuments\DocumentIdProviderDouble.class
+es\upm\grise\profundizacion\HandleDocuments\DocumentIdProvider.class
+es\upm\grise\profundizacion\HandleDocuments\HandleDocumentsMainClass.class
+es\upm\grise\profundizacion\HandleDocuments\NonRecoverableError.class

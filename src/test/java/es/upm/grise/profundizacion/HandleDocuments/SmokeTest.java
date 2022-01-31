@@ -13,7 +13,7 @@ public class SmokeTest {
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
-		Document d = new Document();
+		Document d = new Document(new DocumentIdProviderDouble());
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");
