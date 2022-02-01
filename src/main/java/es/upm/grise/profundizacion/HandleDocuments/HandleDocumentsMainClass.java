@@ -14,8 +14,9 @@ public class HandleDocumentsMainClass {
 		String BODY = args[7];
 		
 		try {
-			
-			Document document = new Document(new DocumentIdProvider());
+			DocumentIdProvider dp = new DocumentIdProvider();
+                        dp.initDocumentIdProvider();
+			Document document = new Document(dp.getDocumentId());
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);

@@ -39,9 +39,11 @@ public class DocumentIdProvider {
         }
     }
 
-    // Create the connection to the database
-    protected DocumentIdProvider() throws NonRecoverableError {
+    protected DocumentIdProvider(){
+    }
 
+    // Create the connection to the database
+    public void initDocumentIdProvider() throws NonRecoverableError {
         // If ENVIRON does not exist, null is returned
         String path = getPath();
 

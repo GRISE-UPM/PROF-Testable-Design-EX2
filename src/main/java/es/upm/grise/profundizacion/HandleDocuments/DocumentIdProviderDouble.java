@@ -19,57 +19,16 @@ import java.util.Properties;
  */
 public class DocumentIdProviderDouble extends DocumentIdProvider {
 
-    protected DocumentIdProviderDouble() throws NonRecoverableError {
+    protected DocumentIdProviderDouble(){
         super();
     }
-
-    @Override
-    protected String getPath() throws NonRecoverableError {
-        return "path";
-    }
     
-    @Override
-    protected Properties loadProperties(String path) throws NonRecoverableError {
-    return null;
+    public void setStartingId(int id){
+        this.documentId = id;
     }
 
-    @Override
-    protected void loadBDDriver(Properties propertiesInFile) throws NonRecoverableError {
-    }
-
-    @Override
-    protected void connectDB(Properties propertiesInFile) throws NonRecoverableError {
-        connection = null;
-        System.out.println("Connected to DataBase!");
-    }
-
-    @Override
-    protected ResultSet readTable(String query) throws NonRecoverableError {
-        ResultSet rs = null;
-        System.out.println("Table read!");
-        return rs;
-    }
-
-    @Override
-    protected void getObjectId(ResultSet resultSet) throws NonRecoverableError {
-        documentId = 1622;
-        System.out.println("Loaded object ID: " + documentId + "!");
-    }
-
-    @Override
-    protected void closeDBConnections(ResultSet resultSet) throws NonRecoverableError {
-        System.out.println("DataBase connection closed!");
-    }
-
-    @Override
-    protected int updateIdCounter(String query) throws NonRecoverableError {
-        System.out.println("Id counter updated!");
-        return 1;
-    }
-    
     @Override
     public int getDocumentId() throws NonRecoverableError {
-
         documentId++;
         return documentId;
     }
