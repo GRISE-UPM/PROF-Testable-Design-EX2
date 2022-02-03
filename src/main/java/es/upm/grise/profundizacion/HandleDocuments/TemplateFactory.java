@@ -3,7 +3,7 @@ package es.upm.grise.profundizacion.HandleDocuments;
 public class TemplateFactory {
 
 	// Returns a template that could be processed String.format()
-	public static String getTemplate(String templateName) {
+	public String getTemplate(String templateName) {
 		
 		String templateBody = null;
 
