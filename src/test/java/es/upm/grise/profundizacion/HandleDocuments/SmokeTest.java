@@ -15,14 +15,20 @@ public class SmokeTest {
 	
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
-		DocumentIdProvider documentIdProvider = new DocumentIdProvider("C:\\Users\\david\\IdeaProjects\\PROF-Testable-Design\\");
-		DocumentIdProvider documentIdProvider1 = mock(DocumentIdProvider.class);
-		Document d = new Document(documentIdProvider);
-		d.setTemplate("DECLARATION");
-		d.setTitle("A");
-		d.setAuthor("B");
-		d.setBody("C");
-		assertEquals("DOCUMENT ID: 1623\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+		DocumentIdProvider documentIdProvider = new DocumentIdProvider("/home/dflobon/IdeaProjects/PROF-Testable-Design/");
+		documentIdProvider.setDocumentId(1622);
+		Document d1 = new Document(documentIdProvider);
+		Document d2 = new Document(documentIdProvider);
+		d1.setTemplate("DECLARATION");
+		d1.setTitle("A");
+		d1.setAuthor("B");
+		d1.setBody("C");
+		assertEquals("DOCUMENT ID: 1623\n\nTitle : A\nAuthor: B\n\nC", d1.getFormattedDocument());
+		d2.setTemplate("DECLARATION");
+		d2.setTitle("A");
+		d2.setAuthor("B");
+		d2.setBody("C");
+		assertEquals("DOCUMENT ID: 1624\n\nTitle : A\nAuthor: B\n\nC", d2.getFormattedDocument());
 
 	}
 

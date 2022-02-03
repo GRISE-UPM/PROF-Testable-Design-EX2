@@ -49,11 +49,14 @@ public class DocumentIdProvider {
 
 		// If ENVIRON does not exist, null is returned
 		if (path == null){
+			// PROD
 			this.path = System.getenv(ENVIRON);
 		}else {
+			// TEST
 			this.path = path;
+			return;
 		}
-
+		// PROD
 		if (this.path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
@@ -180,9 +183,15 @@ public class DocumentIdProvider {
 
 	// Return the next valid objectID
 	public int getDocumentId() throws NonRecoverableError {
-
-		documentId++;
-
+		this.documentId++;
+		if (connection != null){
+			// PROD
+			updateDocumentId(documentId);
+		}
+		return this.documentId;
+	}
+	// METHOD TO TEST THE UPDATE VALUES
+	public void updateDocumentId(int documentId) throws NonRecoverableError {
 		// Access the COUNTERS table
 		String query = "UPDATE Counters SET documentId = ?";
 		int numUpdatedRows;
@@ -197,7 +206,7 @@ public class DocumentIdProvider {
 		} catch (SQLException e) {
 
 			System.out.println(e.toString());
-			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());          	
+			System.out.println(CANNOT_UPDATE_COUNTER.getMessage());
 			throw new NonRecoverableError();
 
 		}
@@ -205,12 +214,12 @@ public class DocumentIdProvider {
 		// Check that the update has been effectively completed
 		if (numUpdatedRows != 1) {
 
-			System.out.println(CORRUPTED_COUNTER.getMessage());          	
+			System.out.println(CORRUPTED_COUNTER.getMessage());
 			throw new NonRecoverableError();
 
 		}
-
-		return documentId;
-
+	}
+	public void setDocumentId(int documentId) {
+		this.documentId = documentId;
 	}
 }
