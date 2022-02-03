@@ -14,8 +14,8 @@ public class HandleDocumentsMainClass {
 		String BODY = args[7];
 		
 		try {
-			
-			Document document = new Document();
+			DocumentIdProvider documentIdProvider = new DocumentIdProvider(null);
+			Document document = new Document(documentIdProvider);
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
@@ -33,12 +33,12 @@ public class HandleDocumentsMainClass {
 			System.exit(1);
 			
 		} catch (NonRecoverableError e) {
-			
+
 			// Exit with error
 			System.exit(1);
-		
+
 		}
-		
+
 
 	}
 

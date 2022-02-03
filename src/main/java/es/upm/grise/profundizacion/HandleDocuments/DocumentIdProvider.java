@@ -26,9 +26,12 @@ public class DocumentIdProvider {
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	private DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
+	// PATH to test methods
+	private String path;
+
+/*	public DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
 			return instance;
@@ -38,16 +41,20 @@ public class DocumentIdProvider {
 			instance = new DocumentIdProvider();
 			return instance;
 
-		}	
-	}
+		}
+	}*/
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public DocumentIdProvider(String path) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
-		
-		if (path == null) {
+		if (path == null){
+			this.path = System.getenv(ENVIRON);
+		}else {
+			this.path = path;
+		}
+
+		if (this.path == null) {
 
 			System.out.println(UNDEFINED_ENVIRON.getMessage());
 			throw new NonRecoverableError();
