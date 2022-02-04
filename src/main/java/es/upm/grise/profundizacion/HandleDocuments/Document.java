@@ -5,7 +5,7 @@ import static es.upm.grise.profundizacion.HandleDocuments.Error.INCOMPLETE_DOCUM
 public class Document {
 
 	// Document ID
-	private int documentId;
+	protected int documentId;
 	
 	// Document attributes
 	private String template;
@@ -14,7 +14,11 @@ public class Document {
 	private String body;
 	
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		this.documentId = DocumentIdProvider.getInstance().getDocumentId(DocumentIdProvider.getInstance().getInstanceDocumentId());
+	}
+
+	public Document(int documentId){
+		this.documentId = documentId;
 	}
 
 	public void setTemplate(String template) {

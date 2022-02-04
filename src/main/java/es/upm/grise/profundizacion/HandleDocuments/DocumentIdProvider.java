@@ -20,7 +20,7 @@ public class DocumentIdProvider {
 	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	protected int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
@@ -42,7 +42,7 @@ public class DocumentIdProvider {
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public DocumentIdProvider() throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
 		String path = System.getenv(ENVIRON);
@@ -172,7 +172,7 @@ public class DocumentIdProvider {
 	}
 
 	// Return the next valid objectID
-	public int getDocumentId() throws NonRecoverableError {
+	public int getDocumentId(int instanceDocumentId) throws NonRecoverableError {
 
 		documentId++;
 
@@ -205,5 +205,9 @@ public class DocumentIdProvider {
 
 		return documentId;
 
+	}
+
+	public int getInstanceDocumentId(){
+		return this.documentId;
 	}
 }
