@@ -13,12 +13,14 @@ public class SmokeTest {
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
-		Document d = new Document();
+		DocumentIdProvider idpro = new DocumentIdProviderFake();
+		TemplateFactory templatefactory = new TemplateFactoryImp();
+		Document d = new Document(idpro, templatefactory);
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");
 		d.setBody("C");
-		assertEquals("DOCUMENT ID: 1623\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
+		assertEquals("DOCUMENT ID: 1\n\nTitle : A\nAuthor: B\n\nC", d.getFormattedDocument());
 
 	}
 

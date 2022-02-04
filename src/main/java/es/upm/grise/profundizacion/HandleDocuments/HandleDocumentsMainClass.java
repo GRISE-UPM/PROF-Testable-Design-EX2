@@ -13,9 +13,12 @@ public class HandleDocumentsMainClass {
 		String AUTHOR = args[5];
 		String BODY = args[7];
 		
+		
+		
 		try {
-			
-			Document document = new Document();
+			DocumentIdProvider idpro = DocumentIdProviderImp.getInstance();
+			TemplateFactory templatefactory = new TemplateFactoryImp();
+			Document document = new Document(idpro, templatefactory);
 			document.setTemplate(TEMPLATE);
 			document.setAuthor(AUTHOR);
 			document.setTitle(TITLE);
