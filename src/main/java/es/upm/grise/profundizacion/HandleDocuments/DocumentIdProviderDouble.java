@@ -17,11 +17,16 @@ public class DocumentIdProviderDouble extends DocumentIdProvider{
 
     @Override
     public int getDocumentId() throws NonRecoverableError {
-        if(documentId < 0) {
+        if(this.documentId < 0) {
             System.out.println(CORRUPTED_COUNTER.getMessage());
             throw new NonRecoverableError();
         }
         return documentId++;
+    }
+
+    @Override
+    public void getLastId() throws NonRecoverableError {
+        throw new NonRecoverableError();
     }
 
 

@@ -47,14 +47,14 @@ public class DocumentIdProvider {
 
 	}
 
-	protected Properties loadProperties() throws NonRecoverableError {
+	protected Properties loadProperties(String properties) throws NonRecoverableError {
 
 		Properties propertiesInFile = new Properties();
 		InputStream inputFile = null;
 
 		// Load the property file
 		try {
-			inputFile = new FileInputStream(System.getProperty("user.dir") + "/" + "config.properties");
+			inputFile = new FileInputStream(System.getProperty("user.dir") + "/" + properties);
 			propertiesInFile.load(inputFile);
 
 		} catch (FileNotFoundException e) {
@@ -78,7 +78,7 @@ public class DocumentIdProvider {
 		// Load DB driver
 		try {
 
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(driver).newInstance();
 
 		} catch (InstantiationException e) {
 
@@ -99,14 +99,13 @@ public class DocumentIdProvider {
 
 	}
 
-	protected void initDBConnection() throws NonRecoverableError {
+	protected void initDBConnection(String url, String username, String password) throws NonRecoverableError {
 
-		Properties propertiesInFile = loadProperties();
 
 		// Get the DB username and password
-		String url = propertiesInFile.getProperty("url");
-		String username = propertiesInFile.getProperty("username");
-		String password = propertiesInFile.getProperty("password");
+//		String url = propertiesInFile.getProperty("url");
+//		String username = propertiesInFile.getProperty("username");
+//		String password = propertiesInFile.getProperty("password");
 
 		// Create DB connection
 		try {
@@ -122,81 +121,63 @@ public class DocumentIdProvider {
 
 	}
 
-	protected String getPath() throws NonRecoverableError {
+	protected void getLastId() throws NonRecoverableError {
 
-		// If ENVIRON does not exist, null is returned
-//		String path = System.getenv(ENVIRON);
+		// Read from the COUNTERS table
+		String query = "SELECT documentId FROM Counters";
+		Statement statement = null;
+		ResultSet resultSet = null;
 
-		String path = System.getProperty("user.dir") + "/";
+		try {
 
-		if (path == null) {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
 
-			System.out.println(UNDEFINED_ENVIRON.getMessage());
+		} catch (SQLException e) {
+
+			System.out.println(CANNOT_RUN_QUERY.getMessage());
 			throw new NonRecoverableError();
 
 		}
-		return path;
-	}
 
+		// Get the last objectID
+		int numberOfValues = 0;
+		try {
 
-			protected void getLastId() throws NonRecoverableError {
+			while (resultSet.next()) {
 
-				// Read from the COUNTERS table
-				String query = "SELECT documentId FROM Counters";
-				Statement statement = null;
-				ResultSet resultSet = null;
+				documentId = resultSet.getInt("documentId");
+				numberOfValues++;
 
-				try {
-
-					statement = connection.createStatement();
-					resultSet = statement.executeQuery(query);
-
-				} catch (SQLException e) {
-
-					System.out.println(CANNOT_RUN_QUERY.getMessage());
-					throw new NonRecoverableError();
-
-				}
-
-				// Get the last objectID
-				int numberOfValues = 0;
-				try {
-
-					while (resultSet.next()) {
-
-						documentId = resultSet.getInt("documentId");
-						numberOfValues++;
-
-					}
-
-				} catch (SQLException e) {
-
-					System.out.println(INCORRECT_COUNTER.getMessage());
-					throw new NonRecoverableError();
-
-				}
-
-				// Only one objectID can be retrieved
-				if (numberOfValues != 1) {
-
-					System.out.println(CORRUPTED_COUNTER.getMessage());
-					throw new NonRecoverableError();
-
-				}
-
-				// Close all DB connections
-				try {
-
-					resultSet.close();
-					statement.close();
-
-				} catch (SQLException e) {
-
-					System.out.println(CONNECTION_LOST.getMessage());
-					throw new NonRecoverableError();
-
-				}
 			}
+
+		} catch (SQLException e) {
+
+			System.out.println(INCORRECT_COUNTER.getMessage());
+			throw new NonRecoverableError();
+
+		}
+
+		// Only one objectID can be retrieved
+		if (numberOfValues != 1) {
+			System.out.println(CORRUPTED_COUNTER.getMessage());
+			throw new NonRecoverableError();
+
+		}
+
+		// Close all DB connections
+		try {
+
+			resultSet.close();
+			statement.close();
+
+		} catch (SQLException e) {
+
+			System.out.println(CONNECTION_LOST.getMessage());
+			throw new NonRecoverableError();
+
+		}
+	}
 
 
 	// Return the next valid objectID

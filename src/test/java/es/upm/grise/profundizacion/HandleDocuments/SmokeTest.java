@@ -1,13 +1,12 @@
 package es.upm.grise.profundizacion.HandleDocuments;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.*;
 
-import org.junit.Test;
 
-import es.upm.grise.profundizacion.HandleDocuments.Document;
-import es.upm.grise.profundizacion.HandleDocuments.NonRecoverableError;
-import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
-import org.junit.jupiter.api.DisplayName;
+
 
 public class SmokeTest {
 
