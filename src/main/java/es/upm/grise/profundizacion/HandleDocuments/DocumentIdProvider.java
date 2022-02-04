@@ -20,7 +20,7 @@ public class DocumentIdProvider {
 	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	protected int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
@@ -29,23 +29,18 @@ public class DocumentIdProvider {
 	private static DocumentIdProvider instance;
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
-		if (instance != null)
-
-			return instance;
-
-		else {
-
-			instance = new DocumentIdProvider();
-			return instance;
-
-		}	
+		if (instance == null) {
+			String path = System.getenv(ENVIRON);
+			instance = new DocumentIdProvider(path, "com.mysql.cj.jdbc.Driver", "url", "user", "password");
+		}
+		return instance;
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public DocumentIdProvider(String path, String DBDriver, String DBURL, String DBUSER, String DBPASS) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+		// String path = System.getenv(ENVIRON);
 		
 		if (path == null) {
 
@@ -172,9 +167,8 @@ public class DocumentIdProvider {
 	}
 
 	// Return the next valid objectID
-	public int getDocumentId() throws NonRecoverableError {
+	public int getDocumentId(int documentLastId) throws NonRecoverableError {
 
-		documentId++;
 
 		// Access the COUNTERS table
 		String query = "UPDATE Counters SET documentId = ?";
@@ -203,7 +197,14 @@ public class DocumentIdProvider {
 
 		}
 
+		documentId = documentLastId++;
+
+
 		return documentId;
 
+	}
+
+	public int getInstanceDocumentId() {
+		return this.documentId;
 	}
 }
