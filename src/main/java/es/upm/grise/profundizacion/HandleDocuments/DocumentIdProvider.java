@@ -20,32 +20,32 @@ public class DocumentIdProvider {
 	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
-	private int documentId;
+	public int documentId;
 
 	// Connection to database (open during program execution)
 	Connection connection = null;
 
 	// Singleton access
-	private static DocumentIdProvider instance;
+	private DocumentIdProvider instance;
 
-	public static DocumentIdProvider getInstance() throws NonRecoverableError {
+	public DocumentIdProvider getInstance() throws NonRecoverableError {
 		if (instance != null)
 
 			return instance;
 
 		else {
-
-			instance = new DocumentIdProvider();
+			String path = System.getenv(ENVIRON);
+			instance = new DocumentIdProvider(path, "com.mysql.cj.jdbc.Driver", "url", "user", "password");
 			return instance;
 
 		}	
 	}
 
 	// Create the connection to the database
-	private DocumentIdProvider() throws NonRecoverableError {
+	public DocumentIdProvider(String path, String driverDB, String urlDB, String userDB, String passwordDB) throws NonRecoverableError {
 
 		// If ENVIRON does not exist, null is returned
-		String path = System.getenv(ENVIRON);
+		//String path = System.getenv(ENVIRON);
 		
 		if (path == null) {
 
@@ -75,14 +75,14 @@ public class DocumentIdProvider {
 			}
 
 			// Get the DB username and password
-			String url = propertiesInFile.getProperty("url");
-			String username = propertiesInFile.getProperty("username");
-			String password = propertiesInFile.getProperty("password");
+			String url = propertiesInFile.getProperty("urlDB");
+			String username = propertiesInFile.getProperty("userDB");
+			String password = propertiesInFile.getProperty("passwordDB");
 
 			// Load DB driver
 			try {
 
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Class.forName("driverDB").newInstance();
 
 			} catch (InstantiationException e) {
 
@@ -172,7 +172,7 @@ public class DocumentIdProvider {
 	}
 
 	// Return the next valid objectID
-	public int getDocumentId() throws NonRecoverableError {
+	public int getDocumentId(int LastDocumentID) throws NonRecoverableError {
 
 		documentId++;
 
@@ -184,7 +184,7 @@ public class DocumentIdProvider {
 		try {
 
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, documentId);
+			preparedStatement.setInt(1, LastDocumentID++);
 			numUpdatedRows = preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
@@ -202,8 +202,14 @@ public class DocumentIdProvider {
 			throw new NonRecoverableError();
 
 		}
-
+		
+		documentId= LastDocumentID++;
 		return documentId;
 
+	}
+	
+	
+	public int getInstanceDocumentId() {
+		return this.documentId;
 	}
 }
