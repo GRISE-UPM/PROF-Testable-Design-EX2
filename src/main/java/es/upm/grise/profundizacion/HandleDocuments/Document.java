@@ -12,9 +12,15 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-	
+
+	public Document(int id) {
+		this.documentId = id;
+	}
+
 	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		//this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+		this.documentId = DocumentIdProvider.getInstance().getDocumentId(DocumentIdProvider.getInstance().getTrueId());
+
 	}
 
 	public void setTemplate(String template) {
