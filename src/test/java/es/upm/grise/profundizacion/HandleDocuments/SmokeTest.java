@@ -7,13 +7,17 @@ import org.junit.Test;
 import es.upm.grise.profundizacion.HandleDocuments.Document;
 import es.upm.grise.profundizacion.HandleDocuments.NonRecoverableError;
 import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
+import org.junit.jupiter.api.DisplayName;
 
 public class SmokeTest {
-	
+
+
+	@DisplayName("Test1: La aplicación genera las plantillas correctamente.")
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
-		
-		Document d = new Document();
+
+		DocumentIdProviderDouble documentIdProviderDouble = new DocumentIdProviderDouble(1623);
+		Document d = new Document(documentIdProviderDouble);
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");

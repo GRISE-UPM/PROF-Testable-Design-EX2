@@ -5,12 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="873c664d-09fa-4525-81a0-eaa7e1e7d6af" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/DocumentIdProviderDouble.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/es/upm/grise/profundizacion/HandleDocuments/TestableDesignTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/changes.md" beforeDir="false" afterPath="$PROJECT_DIR$/changes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/DocumentIdProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/DocumentIdProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/HandleDocumentsMainClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/upm/grise/profundizacion/HandleDocuments/HandleDocumentsMainClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/es/upm/grise/profundizacion/HandleDocuments/SmokeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/upm/grise/profundizacion/HandleDocuments/SmokeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,6 +42,9 @@
     </option>
   </component>
   <component name="ProjectId" id="24TKLZBmqJ9YImk86eQJHE7ckoj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -72,6 +91,7 @@
       <option name="presentableId" value="Default" />
       <updated>1643649080978</updated>
       <workItem from="1643649082836" duration="826000" />
+      <workItem from="1643998246879" duration="8298000" />
     </task>
     <servers />
   </component>
@@ -88,5 +108,21 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/es/upm/grise/profundizacion/HandleDocuments/SmokeTest.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/es/upm/grise/profundizacion/HandleDocuments/SmokeTest.java</url>
+          <line>19</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
