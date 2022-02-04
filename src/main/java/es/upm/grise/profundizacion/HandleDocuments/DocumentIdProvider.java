@@ -17,16 +17,19 @@ import java.util.Properties;
 public class DocumentIdProvider {
 
 	// Environment variable
-	private static String ENVIRON  = "APP_HOME";
+//	private static String ENVIRON  = "APP_HOME";
 
 	// ID for the newly created documents
 	private int documentId;
 
 	// Connection to database (open during program execution)
-	Connection connection = null;
+	private Connection connection = null;
 
 	// Singleton access
 	private static DocumentIdProvider instance;
+
+	private Statement statement = null;
+	private ResultSet resultSet = null;
 
 
 	public static DocumentIdProvider getInstance() throws NonRecoverableError {
@@ -43,7 +46,7 @@ public class DocumentIdProvider {
 	}
 
 	// Create the connection to the database
-	protected DocumentIdProvider() throws NonRecoverableError {
+	protected DocumentIdProvider() {
 
 	}
 
@@ -101,7 +104,6 @@ public class DocumentIdProvider {
 
 	protected void initDBConnection(String url, String username, String password) throws NonRecoverableError {
 
-
 		// Get the DB username and password
 //		String url = propertiesInFile.getProperty("url");
 //		String username = propertiesInFile.getProperty("username");
@@ -121,7 +123,7 @@ public class DocumentIdProvider {
 
 	}
 
-	protected void getLastId() throws NonRecoverableError {
+	protected void getDocumentFromCountersTable() throws NonRecoverableError {
 
 		// Read from the COUNTERS table
 		String query = "SELECT documentId FROM Counters";
@@ -139,6 +141,10 @@ public class DocumentIdProvider {
 			throw new NonRecoverableError();
 
 		}
+
+	}
+
+	protected void getLastId() throws NonRecoverableError {
 
 		// Get the last objectID
 		int numberOfValues = 0;
