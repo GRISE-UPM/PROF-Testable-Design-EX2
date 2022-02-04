@@ -22,14 +22,5 @@ public class SmokeTest {
 
 	}
 
-	@Test
-	public void idIncrements() throws NonRecoverableError {
-
-		DocumentIdProvider t = DocumentIdProvider.getInstance();
-		int expectedId = 1643;
-
-		assertEquals(expectedId, t.getDocumentId(expectedId-1));
-
-	}
 
 }
