@@ -10,10 +10,14 @@ import es.upm.grise.profundizacion.HandleDocuments.RecoverableError;
 
 public class SmokeTest {
 	
+	
+	DocumentIdProvider documentIdProvider = new DocumentIdProviderDouble();
+	TemplateFactory templateFactory = new TemplateFactoryImpl();
+	
 	@Test
 	public void formatTemplateCorrectly() throws NonRecoverableError, RecoverableError {
 		
-		Document d = new Document();
+		Document d = new Document(documentIdProvider,templateFactory);
 		d.setTemplate("DECLARATION");
 		d.setTitle("A");
 		d.setAuthor("B");
