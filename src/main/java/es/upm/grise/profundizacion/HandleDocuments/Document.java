@@ -12,9 +12,13 @@ public class Document {
 	private String author;
 	private String title;
 	private String body;
-	
-	public Document() throws NonRecoverableError {
-		this.documentId = DocumentIdProvider.getInstance().getDocumentId();
+
+	public Document(DocumentIdProvider dp) throws NonRecoverableError {
+		this.documentId = dp.getDocumentId();
+	}
+
+	public Document(int documentId) throws NonRecoverableError {
+		this.documentId = documentId;
 	}
 
 	public void setTemplate(String template) {
@@ -46,7 +50,7 @@ public class Document {
 			body == null) {
 			
 			System.out.println(INCOMPLETE_DOCUMENT.getMessage());          	
-			throw new RecoverableError();
+			throw new RecoverableError(INCOMPLETE_DOCUMENT.getMessage());
 			
 		} else {
 
